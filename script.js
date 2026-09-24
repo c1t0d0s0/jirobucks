@@ -74,6 +74,8 @@ const I18N = {
     btnCopied: 'コピー完了！',
     btnSpeak: '読み上げ',
     btnShare: 'シェア',
+    btnViewSpell: '呪文を見る',
+    btnDismissSpell: '▼ 閉じて選択に戻る',
     guideTitleJiro: '【初心者必読】ラーメン二郎の入店・注文ルールとマナー',
     guideTitleBucks: '【スタバ初心者向け】サイズ一覧とカスタムの基礎知識',
     modalBadge: '店員さんにお見せください',
@@ -227,6 +229,8 @@ const I18N = {
     btnCopied: 'Copied!',
     btnSpeak: 'Read Aloud',
     btnShare: 'Share',
+    btnViewSpell: 'View Spell',
+    btnDismissSpell: '▼ Close (Back to options)',
     guideTitleJiro: '【Beginner Guide】Ramen Jiro Etiquette & Ordering Rules',
     guideTitleBucks: '【Beginner Guide】Starbucks Sizes & Customization Basics',
     modalBadge: 'Please show this screen to the staff',
@@ -1183,6 +1187,18 @@ function updateSpellDisplay() {
     row.innerHTML = `<span>${item.label}</span>`;
     modalDetailsEl.appendChild(row);
   });
+
+  // Mobile Bottom Dock preview update
+  const dockTag = document.getElementById('dock-tag');
+  const dockText = document.getElementById('dock-text');
+  if (dockTag) {
+    dockTag.textContent = state.mode === 'jiro' 
+      ? (state.lang === 'ja' ? '二郎コール' : 'Jiro Call') 
+      : (state.lang === 'ja' ? 'スタバ注文呪文' : 'Starbucks Order');
+  }
+  if (dockText) {
+    dockText.textContent = `「${spellData.mainSpell}」`;
+  }
 }
 
 /**
@@ -1511,6 +1527,61 @@ function setupModal() {
 }
 
 /**
+ * Mobile Drawer Controller
+ */
+function setupMobileDrawer() {
+  const drawer = document.getElementById('spell-column');
+  const backdrop = document.getElementById('spell-backdrop');
+  const btnOpen = document.getElementById('btn-open-mobile-spell');
+  const dockPreview = document.getElementById('dock-preview');
+  const btnClose = document.getElementById('btn-close-spell');
+  const btnDismiss = document.getElementById('btn-spell-card-dismiss');
+
+  function openDrawer() {
+    updateSpellDisplay();
+    if (drawer) drawer.classList.add('open-drawer');
+    if (backdrop) {
+      backdrop.classList.add('active');
+      backdrop.setAttribute('aria-hidden', 'false');
+    }
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeDrawer() {
+    if (drawer) drawer.classList.remove('open-drawer');
+    if (backdrop) {
+      backdrop.classList.remove('active');
+      backdrop.setAttribute('aria-hidden', 'true');
+    }
+    document.body.style.overflow = '';
+  }
+
+  if (btnOpen) btnOpen.addEventListener('click', openDrawer);
+  if (dockPreview) dockPreview.addEventListener('click', openDrawer);
+  if (btnClose) btnClose.addEventListener('click', closeDrawer);
+  if (btnDismiss) btnDismiss.addEventListener('click', closeDrawer);
+  if (backdrop) backdrop.addEventListener('click', closeDrawer);
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && drawer && drawer.classList.contains('open-drawer')) {
+      closeDrawer();
+    }
+  });
+
+  // When Show to Staff modal opens, close the drawer so it doesn't overlap
+  const btnShowStaff = document.getElementById('btn-show-staff');
+  if (btnShowStaff) {
+    btnShowStaff.addEventListener('click', () => {
+      if (drawer) drawer.classList.remove('open-drawer');
+      if (backdrop) {
+        backdrop.classList.remove('active');
+        backdrop.setAttribute('aria-hidden', 'true');
+      }
+    });
+  }
+}
+
+/**
  * Initialize Click Listeners for Options Chips
  */
 function setupOptionListeners() {
@@ -1619,6 +1690,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // 3. Setup UI & Listeners
   setupOptionListeners();
   setupModal();
+  setupMobileDrawer();
   updateLanguageUI();
   syncJiroChips();
   syncStarbucksChips();

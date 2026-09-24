@@ -394,14 +394,9 @@ button:focus-visible {
   align-items: start;
 }
 
-@media (max-width: 980px) {
+@media (max-width: 900px) {
   .builder-layout {
     grid-template-columns: 1fr;
-  }
-  
-  /* On mobile/tablet, move spell card to the top so user immediately sees what they create */
-  .spell-column {
-    order: -1;
   }
 }
 
@@ -706,6 +701,13 @@ input:checked + .toggle-slider::before {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.spell-header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
 }
 
 .spell-tag {
@@ -727,6 +729,45 @@ input:checked + .toggle-slider::before {
   display: inline-block;
   box-shadow: 0 0 8px #22C55E;
   animation: pulse-live 1.8s infinite;
+}
+
+.spell-close-btn {
+  display: none;
+  align-items: center;
+  gap: 0.35rem;
+  background: rgba(255, 255, 255, 0.15);
+  color: #FFFFFF;
+  border-radius: var(--radius-full);
+  font-size: 0.82rem;
+  font-weight: 800;
+  padding: 0.35rem 0.85rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.spell-close-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.action-btn-dismiss {
+  display: none;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  padding: 0.8rem 1rem;
+  background: rgba(255, 255, 255, 0.12);
+  color: #EEEEEE;
+  border-radius: var(--radius-md);
+  font-size: 0.92rem;
+  font-weight: 800;
+  cursor: pointer;
+  margin-top: 0.4rem;
+  transition: all var(--transition-fast);
+}
+
+.action-btn-dismiss:hover {
+  background: rgba(255, 255, 255, 0.22);
+  color: #FFFFFF;
 }
 
 @keyframes pulse-live {
@@ -1232,5 +1273,146 @@ body[data-mode="starbucks"] .modal-spell-text {
   .modal-spell-text {
     font-size: 1.65rem;
     padding: 1rem 0.75rem;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   14. Mobile Collapsible Spell Drawer & Bottom Dock
+   -------------------------------------------------------------------------- */
+.mobile-spell-dock {
+  display: none;
+}
+
+.spell-backdrop {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  /* Floating Bottom Dock on Mobile */
+  .mobile-spell-dock {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 90;
+    background: var(--header-bg);
+    color: #FFFFFF;
+    box-shadow: 0 -4px 18px rgba(0, 0, 0, 0.3);
+    padding: 0.65rem 1.1rem calc(0.65rem + env(safe-area-inset-bottom, 0px));
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.85rem;
+    border-top: 2.5px solid var(--theme-primary);
+  }
+
+  .dock-preview {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    cursor: pointer;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .dock-badge {
+    font-size: 0.7rem;
+    font-weight: 800;
+    color: var(--spell-card-highlight);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .dock-text {
+    font-family: var(--font-family-heading);
+    font-size: 0.95rem;
+    font-weight: 800;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #FFFFFF;
+  }
+
+  .dock-open-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    background: var(--theme-primary);
+    color: var(--theme-primary-contrast);
+    padding: 0.65rem 1.15rem;
+    border-radius: var(--radius-full);
+    font-size: 0.92rem;
+    font-weight: 900;
+    flex-shrink: 0;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.25);
+    cursor: pointer;
+    transition: transform var(--transition-fast), filter var(--transition-fast);
+  }
+
+  .dock-open-btn:active {
+    transform: scale(0.96);
+  }
+
+  /* Drawer Container for Mobile */
+  .spell-column {
+    position: fixed !important;
+    top: auto !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    max-height: 88vh;
+    z-index: 150;
+    transform: translateY(105%);
+    transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 -12px 36px rgba(0, 0, 0, 0.5);
+    border-radius: 20px 20px 0 0;
+    overflow-y: auto;
+    background: var(--spell-card-bg);
+  }
+
+  .spell-column.open-drawer {
+    transform: translateY(0);
+  }
+
+  .spell-card {
+    border-radius: 20px 20px 0 0;
+    border: none;
+    border-top: 3px solid var(--theme-primary);
+    padding-bottom: calc(1.75rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  /* Drawer Backdrop */
+  .spell-backdrop {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(2px);
+    z-index: 140;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+  }
+
+  .spell-backdrop.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* Show close and dismiss buttons on mobile */
+  .spell-close-btn {
+    display: inline-flex;
+  }
+
+  .action-btn-dismiss {
+    display: flex;
+  }
+
+  /* Extra padding at bottom of page container so dock doesn't obscure content */
+  .main-container {
+    padding-bottom: calc(5.5rem + env(safe-area-inset-bottom, 0px)) !important;
   }
 }

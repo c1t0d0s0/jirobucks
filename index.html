@@ -392,14 +392,17 @@
 
       </section>
 
-      <!-- Right Column: Live Spell Display Card (Sticky / High-Visibility) -->
-      <aside class="spell-column">
+      <!-- Right Column: Live Spell Display Card (Sticky on desktop, Collapsible Bottom Drawer on mobile) -->
+      <aside class="spell-column" id="spell-column">
         <div class="spell-card-wrapper" id="sticky-spell-card">
           <div class="spell-card">
             
             <div class="spell-card-header">
-              <span class="spell-tag" id="spell-type-tag" data-i18n="tagJiroCall">二郎コール呪文</span>
-              <span class="live-dot" title="リアルタイム更新中"></span>
+              <div class="spell-header-left">
+                <span class="spell-tag" id="spell-type-tag" data-i18n="tagJiroCall">二郎コール呪文</span>
+                <span class="live-dot" title="リアルタイム更新中"></span>
+              </div>
+              <button type="button" class="spell-close-btn" id="btn-close-spell" aria-label="閉じる" title="閉じる">✕ 閉じる</button>
             </div>
 
             <div class="spell-display-area">
@@ -446,6 +449,9 @@
                   <span data-i18n="btnShare">シェア</span>
                 </button>
               </div>
+
+              <!-- Dismiss / Close button for mobile drawer -->
+              <button type="button" id="btn-spell-card-dismiss" class="action-btn-dismiss" data-i18n="btnDismissSpell">▼ 閉じて選択に戻る</button>
             </div>
 
           </div>
@@ -453,6 +459,21 @@
       </aside>
 
     </div>
+
+    <!-- Mobile Floating Bottom Dock (Sticky Trigger Bar) -->
+    <aside class="mobile-spell-dock" id="mobile-spell-dock" aria-label="呪文確認バー">
+      <div class="dock-preview" id="dock-preview" title="タップして呪文を表示">
+        <span class="dock-badge" id="dock-tag">二郎コール</span>
+        <span class="dock-text" id="dock-text">「ニンニクマシ...」</span>
+      </div>
+      <button type="button" class="dock-open-btn" id="btn-open-mobile-spell">
+        <span class="btn-icon">📜</span>
+        <span data-i18n="btnViewSpell">呪文を見る</span>
+      </button>
+    </aside>
+
+    <!-- Backdrop for Mobile Drawer -->
+    <div id="spell-backdrop" class="spell-backdrop" aria-hidden="true"></div>
 
     <!-- Etiquette & Beginner Guide Section -->
     <section class="guide-section">
