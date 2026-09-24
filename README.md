@@ -1,4 +1,4 @@
-# JIROBUCKS (ジロバックス)
+# JIROBUCKS (ジローバックス)
 
 > **Effortless Order Spell & Call Generator for Ramen Jiro and Starbucks**  
 > Generate intimidation-free ordering calls for Ramen Jiro and fluent customization spells for Starbucks in one clean, bright, accessible web app.
