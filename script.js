@@ -941,7 +941,8 @@ function compileStarbucksSpell() {
   }
 
   // 5. Decaf / Roast
-  if (drink.hasEspresso || sb.shots !== 'none') {
+  const hasCoffee = drink.hasEspresso || drink.id === 'drip_coffee' || (sb.shots !== 'none' && sb.shots !== 'standard');
+  if (hasCoffee) {
     if (sb.beans === 'decaf') {
       terms.push('ディカフェ');
       termsEn.push('Decaf');
@@ -950,14 +951,14 @@ function compileStarbucksSpell() {
       terms.push('ブロンド');
       termsEn.push('Blonde Roast');
       breakdown.push({ label: isJa ? '🌾 ブロンドロースト' : 'Blonde Roast', hl: false });
-    } else if (sb.beans === 'ristretto') {
+    } else if (sb.beans === 'ristretto' && (drink.hasEspresso || (sb.shots !== 'none' && sb.shots !== 'standard'))) {
       terms.push('リストレット');
       termsEn.push('Ristretto');
       breakdown.push({ label: isJa ? '☕ リストレット抽出' : 'Ristretto', hl: false });
     }
   }
 
-  // 6. Single or Double Shot addition (when not triple/quad)
+  // 6. Shot addition / modification
   if (drink.hasEspresso) {
     if (sb.shots === 'none') {
       terms.push('ショット抜き');
@@ -971,6 +972,25 @@ function compileStarbucksSpell() {
       terms.push('ダブルショット追加');
       termsEn.push('Add 2 Shots (Doppio)');
       breakdown.push({ label: isJa ? '☕ +2ショット追加' : '+2 Shots', hl: true });
+    }
+  } else {
+    // Drinks that do not originally have espresso (Drip Coffee, Tea Latte, Frappuccino, etc.)
+    if (sb.shots === 'single') {
+      terms.push('ワンショット追加');
+      termsEn.push('Add 1 Shot');
+      breakdown.push({ label: isJa ? '☕ +1ショット追加' : '+1 Shot', hl: true });
+    } else if (sb.shots === 'double') {
+      terms.push('2ショット追加');
+      termsEn.push('Add 2 Shots');
+      breakdown.push({ label: isJa ? '☕ +2ショット追加' : '+2 Shots', hl: true });
+    } else if (sb.shots === 'triple') {
+      terms.push('3ショット追加');
+      termsEn.push('Add 3 Shots');
+      breakdown.push({ label: isJa ? '☕ +3ショット追加' : '+3 Shots', hl: true });
+    } else if (sb.shots === 'quad') {
+      terms.push('4ショット追加');
+      termsEn.push('Add 4 Shots');
+      breakdown.push({ label: isJa ? '☕ +4ショット追加' : '+4 Shots', hl: true });
     }
   }
 
@@ -1575,7 +1595,61 @@ function fallbackCopy(text) {
 }
 
 /**
+ * Voice selection helper for Speech Synthesis
+ * Accurately finds native Japanese or native English voices
+ */
+function getBestVoice(targetLang) {
+  if (!('speechSynthesis' in window)) return null;
+  const voices = window.speechSynthesis.getVoices();
+  if (!voices || voices.length === 0) return null;
+
+  if (targetLang.startsWith('en')) {
+    // English voices
+    const enVoices = voices.filter(v => v.lang && (v.lang.toLowerCase().startsWith('en-') || v.lang.toLowerCase().startsWith('en_') || v.lang.toLowerCase() === 'en'));
+    if (enVoices.length === 0) return null;
+
+    // High quality / native preferred voice names
+    const preferredEnNames = [
+      'google us english', 'google uk english female', 'google uk english male',
+      'samantha', 'alex', 'daniel', 'karen', 'victoria', 'serena', 'oliver',
+      'natural', 'microsoft zira', 'microsoft david', 'microsoft aria', 'microsoft guy',
+      'en-us', 'en_us'
+    ];
+
+    for (const name of preferredEnNames) {
+      const found = enVoices.find(v => v.name && v.name.toLowerCase().includes(name));
+      if (found) return found;
+    }
+
+    // Fallback to en-US or default voice
+    const usVoice = enVoices.find(v => v.lang.replace('_', '-').toLowerCase() === 'en-us');
+    if (usVoice) return usVoice;
+
+    const defaultEn = enVoices.find(v => v.default);
+    if (defaultEn) return defaultEn;
+
+    return enVoices[0];
+  } else {
+    // Japanese voices
+    const jaVoices = voices.filter(v => v.lang && (v.lang.toLowerCase().startsWith('ja') || v.lang.replace('_', '-').toLowerCase() === 'ja-jp'));
+    if (jaVoices.length === 0) return null;
+
+    const preferredJaNames = ['google 日本語', 'kyoko', 'otoya', 'nanami', 'keita', 'ayumi', 'haruka', 'microsoft ayumi', 'microsoft ichiro'];
+    for (const name of preferredJaNames) {
+      const found = jaVoices.find(v => v.name && v.name.toLowerCase().includes(name));
+      if (found) return found;
+    }
+
+    const defaultJa = jaVoices.find(v => v.default);
+    if (defaultJa) return defaultJa;
+
+    return jaVoices[0];
+  }
+}
+
+/**
  * Speech Synthesis (Web Speech API)
+ * Speaks with native pronunciation based on language and mode
  */
 function speakSpell() {
   if (!('speechSynthesis' in window)) {
@@ -1586,17 +1660,29 @@ function speakSpell() {
   window.speechSynthesis.cancel(); // Stop any active speech
 
   const spellData = state.mode === 'jiro' ? compileJiroSpell() : compileStarbucksSpell();
-  const utterance = new SpeechSynthesisUtterance(spellData.mainSpell);
+  const isEnglish = state.mode === 'starbucks' && state.lang === 'en';
+  const textToSpeak = spellData.mainSpell;
 
-  utterance.lang = 'ja-JP';
-  utterance.rate = 1.0;
-  utterance.pitch = 1.0;
+  const utterance = new SpeechSynthesisUtterance(textToSpeak);
 
-  // Prefer natural Japanese voice if available
-  const voices = window.speechSynthesis.getVoices();
-  const jaVoice = voices.find(v => v.lang === 'ja-JP' || v.lang === 'ja_JP');
-  if (jaVoice) {
-    utterance.voice = jaVoice;
+  if (isEnglish) {
+    utterance.lang = 'en-US';
+    utterance.rate = 0.95; // Natural, clear barista ordering cadence
+    utterance.pitch = 1.0;
+
+    const enVoice = getBestVoice('en');
+    if (enVoice) {
+      utterance.voice = enVoice;
+    }
+  } else {
+    utterance.lang = 'ja-JP';
+    utterance.rate = 1.0;
+    utterance.pitch = 1.0;
+
+    const jaVoice = getBestVoice('ja');
+    if (jaVoice) {
+      utterance.voice = jaVoice;
+    }
   }
 
   window.speechSynthesis.speak(utterance);
@@ -1928,9 +2014,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Ensure speech voices are loaded
   if ('speechSynthesis' in window) {
-    window.speechSynthesis.onvoiceschanged = () => {
-      window.speechSynthesis.getVoices();
-    };
+    window.speechSynthesis.getVoices();
+    if (window.speechSynthesis.onvoiceschanged !== undefined) {
+      window.speechSynthesis.onvoiceschanged = () => {
+        window.speechSynthesis.getVoices();
+      };
+    }
   }
 
   // Expose JIROBUCKS for debugging & testing
