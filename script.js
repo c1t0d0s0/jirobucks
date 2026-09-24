@@ -509,6 +509,13 @@ const STARBUCKS_PRESETS = [
     ja: 'ダーティーマッチャ (抹茶ラテ+1ショット)',
     en: 'Dirty Matcha (Matcha Latte + 1 Shot)',
     state: { category: 'tea', drinkId: 'matcha_tea_latte', temp: 'hot', size: 'tall', milk: 'regular', shots: 'single', beans: 'standard', syrup: 'default', whip: 'default', drizzle: 'none', icemilk: 'default', frapcustom: 'none' }
+  },
+  {
+    id: 'eye_of_the_tiger',
+    emoji: '🐯',
+    ja: 'アイオブザタイガー (ドリップ+4ショット)',
+    en: 'Eye of the Tiger (Drip + 4 Shots)',
+    state: { category: 'tea', drinkId: 'drip_coffee', temp: 'hot', size: 'venti', milk: 'regular', shots: 'quad', beans: 'standard', syrup: 'default', whip: 'default', drizzle: 'none', icemilk: 'default', frapcustom: 'none' }
   }
 ];
 
@@ -939,6 +946,7 @@ const STARBUCKS_CALL_NAMES = {
  * - Red Eye: Drip Coffee + 1 Shot
  * - Black Eye: Drip Coffee + 2 Shots (Depth Charge)
  * - Green Eye: Drip Coffee + 3 Shots
+ * - Eye of the Tiger: Drip Coffee + 4 Shots
  * - Dirty Chai: Chai Tea Latte + Espresso Shot(s)
  * - Dirty Matcha: Matcha Latte + Espresso Shot(s)
  */
@@ -973,8 +981,18 @@ function detectStarbucksAlias(sbState) {
         nameEn: 'Green Eye',
         fullNameJa: 'グリーンアイ (Green Eye)',
         fullNameEn: 'Green Eye (グリーンアイ)',
-        noteJa: 'ドリップコーヒー＋エスプレッソ3ショット',
-        noteEn: 'Drip Coffee + 3 Espresso Shots'
+        noteJa: '※ デッドアイ (Dead Eye) とも呼ぶ',
+        noteEn: '※ Also known as Dead Eye'
+      };
+    }
+    if (shots === 'quad') {
+      return {
+        nameJa: 'アイオブザタイガー',
+        nameEn: 'Eye of the Tiger',
+        fullNameJa: 'アイオブザタイガー (Eye of the Tiger)',
+        fullNameEn: 'Eye of the Tiger (アイオブザタイガー)',
+        noteJa: 'ドリップコーヒー＋エスプレッソ4ショット',
+        noteEn: 'Drip Coffee + 4 Espresso Shots'
       };
     }
   } else if (drinkId === 'chai_tea_latte') {
