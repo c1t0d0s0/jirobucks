@@ -814,6 +814,56 @@ input:checked + .toggle-slider::before {
   word-break: break-word;
 }
 
+/* Alias / Nickname Badge */
+.spell-alias-badge {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.55rem 0.85rem;
+  margin-top: 0.55rem;
+  background: linear-gradient(135deg, rgba(212, 163, 89, 0.22) 0%, rgba(0, 117, 74, 0.25) 100%);
+  border: 1.5px solid rgba(212, 163, 89, 0.6);
+  border-radius: var(--radius-md);
+  color: #FFFFFF;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: all var(--transition-fast);
+}
+
+.alias-header {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+}
+
+.alias-tag {
+  background: #D4A359;
+  color: #111111;
+  font-size: 0.72rem;
+  font-weight: 900;
+  padding: 0.15rem 0.45rem;
+  border-radius: var(--radius-sm);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  line-height: 1.2;
+}
+
+.alias-title {
+  font-family: var(--font-family-heading);
+  font-size: 0.98rem;
+  font-weight: 900;
+  color: #FFE7BA;
+  letter-spacing: 0.02em;
+}
+
+.alias-note {
+  font-size: 0.76rem;
+  color: #E2E8F0;
+  opacity: 0.92;
+  margin: 0;
+  line-height: 1.35;
+}
+
 /* Calorie & Unique Index Metrics Panel (1 row each) */
 .spell-metrics-panel {
   display: flex;

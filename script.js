@@ -77,6 +77,7 @@ const I18N = {
     btnViewSpell: '呪文を見る',
     btnDismissSpell: '▼ 閉じて選択に戻る',
     metricCalorieLabel: '推定カロリー:',
+    aliasTag: '通称',
     guideTitleJiro: '【初心者必読】ラーメン二郎の入店・注文ルールとマナー',
     guideTitleBucks: '【スタバ初心者向け】サイズ一覧とカスタムの基礎知識',
     modalBadge: '店員さんにお見せください',
@@ -233,6 +234,7 @@ const I18N = {
     btnViewSpell: 'View Spell',
     btnDismissSpell: '▼ Close (Back to options)',
     metricCalorieLabel: 'Est. Calories:',
+    aliasTag: 'AKA',
     guideTitleJiro: '【Beginner Guide】Ramen Jiro Etiquette & Ordering Rules',
     guideTitleBucks: '【Beginner Guide】Starbucks Sizes & Customization Basics',
     modalBadge: 'Please show this screen to the staff',
@@ -384,6 +386,7 @@ const STARBUCKS_DRINKS = [
 
   // Tea & Others
   { id: 'chai_tea_latte', category: 'tea', ja: 'チャイ ティー ラテ', en: 'Chai Tea Latte', defaultHotIce: 'both', hasWhip: false, hasSyrup: true, hasEspresso: false },
+  { id: 'matcha_tea_latte', category: 'tea', ja: '抹茶 ティー ラテ', en: 'Matcha Tea Latte', defaultHotIce: 'both', hasWhip: false, hasSyrup: true, hasEspresso: false },
   { id: 'hojicha_tea_latte', category: 'tea', ja: 'ほうじ茶 ティー ラテ', en: 'Hojicha Tea Latte', defaultHotIce: 'both', hasWhip: false, hasSyrup: true, hasEspresso: false },
   { id: 'drip_coffee', category: 'tea', ja: 'ドリップ コーヒー', en: 'Drip Coffee', defaultHotIce: 'both', hasWhip: false, hasSyrup: false, hasEspresso: false }
 ];
@@ -478,6 +481,34 @@ const STARBUCKS_PRESETS = [
     ja: 'ソイ・ディカフェ・アメリカーノ',
     en: 'Soy Decaf Americano',
     state: { category: 'espresso', drinkId: 'caffe_americano', temp: 'iced', size: 'grande', milk: 'soy', shots: 'standard', beans: 'decaf', syrup: 'none', whip: 'none', drizzle: 'none', icemilk: 'default', frapcustom: 'none' }
+  },
+  {
+    id: 'red_eye',
+    emoji: '👁️',
+    ja: 'レッドアイ (ドリップ+1ショット)',
+    en: 'Red Eye (Drip + 1 Shot)',
+    state: { category: 'tea', drinkId: 'drip_coffee', temp: 'hot', size: 'tall', milk: 'regular', shots: 'single', beans: 'standard', syrup: 'default', whip: 'default', drizzle: 'none', icemilk: 'default', frapcustom: 'none' }
+  },
+  {
+    id: 'black_eye',
+    emoji: '💥',
+    ja: 'ブラックアイ / デプスチャージ (ドリップ+2ショット)',
+    en: 'Black Eye / Depth Charge (Drip + 2 Shots)',
+    state: { category: 'tea', drinkId: 'drip_coffee', temp: 'hot', size: 'tall', milk: 'regular', shots: 'double', beans: 'standard', syrup: 'default', whip: 'default', drizzle: 'none', icemilk: 'default', frapcustom: 'none' }
+  },
+  {
+    id: 'dirty_chai',
+    emoji: '☕',
+    ja: 'ダーティーチャイ (チャイ+1ショット)',
+    en: 'Dirty Chai (Chai + 1 Shot)',
+    state: { category: 'tea', drinkId: 'chai_tea_latte', temp: 'hot', size: 'tall', milk: 'regular', shots: 'single', beans: 'standard', syrup: 'default', whip: 'default', drizzle: 'none', icemilk: 'default', frapcustom: 'none' }
+  },
+  {
+    id: 'dirty_matcha',
+    emoji: '🍵',
+    ja: 'ダーティーマッチャ (抹茶ラテ+1ショット)',
+    en: 'Dirty Matcha (Matcha Latte + 1 Shot)',
+    state: { category: 'tea', drinkId: 'matcha_tea_latte', temp: 'hot', size: 'tall', milk: 'regular', shots: 'single', beans: 'standard', syrup: 'default', whip: 'default', drizzle: 'none', icemilk: 'default', frapcustom: 'none' }
   }
 ];
 
@@ -608,6 +639,7 @@ function calculateStarbucksMetrics(sbState, isJa) {
     caramel_frap: { iced: 302 },
     vanilla_frap: { iced: 255 },
     chai_tea_latte: { hot: 220, iced: 198 },
+    matcha_tea_latte: { hot: 225, iced: 168 },
     hojicha_tea_latte: { hot: 162, iced: 140 },
     drip_coffee: { hot: 18, iced: 10 }
   };
@@ -872,7 +904,8 @@ function compileJiroSpell() {
     phonetic: callPhonetic,
     ticketText: isJa ? ticketStrJa : ticketStrEn,
     breakdown: callBreakdown,
-    metrics: calculateJiroMetrics(state.jiro, isJa)
+    metrics: calculateJiroMetrics(state.jiro, isJa),
+    alias: null
   };
 }
 
@@ -899,6 +932,77 @@ const STARBUCKS_CALL_NAMES = {
   caffe_mocha: { ja: 'モカ', en: 'Mocha' },
   white_mocha: { ja: 'ホワイト モカ', en: 'White Mocha' }
 };
+
+/**
+ * Detect Starbucks Monikers / Aliases (通称)
+ * Identifies recognized specialty combinations:
+ * - Red Eye: Drip Coffee + 1 Shot
+ * - Black Eye: Drip Coffee + 2 Shots (Depth Charge)
+ * - Green Eye: Drip Coffee + 3 Shots
+ * - Dirty Chai: Chai Tea Latte + Espresso Shot(s)
+ * - Dirty Matcha: Matcha Latte + Espresso Shot(s)
+ */
+function detectStarbucksAlias(sbState) {
+  const { drinkId, shots } = sbState;
+  if (!shots || shots === 'none' || shots === 'standard') return null;
+
+  if (drinkId === 'drip_coffee') {
+    if (shots === 'single') {
+      return {
+        nameJa: 'レッドアイ',
+        nameEn: 'Red Eye',
+        fullNameJa: 'レッドアイ (Red Eye)',
+        fullNameEn: 'Red Eye (レッドアイ)',
+        noteJa: 'ドリップコーヒー＋エスプレッソ1ショット',
+        noteEn: 'Drip Coffee + 1 Espresso Shot'
+      };
+    }
+    if (shots === 'double') {
+      return {
+        nameJa: 'ブラックアイ',
+        nameEn: 'Black Eye',
+        fullNameJa: 'ブラックアイ (Black Eye)',
+        fullNameEn: 'Black Eye (ブラックアイ)',
+        noteJa: '※ デプスチャージ (Depth Charge) とも呼ぶ',
+        noteEn: '※ Also known as Depth Charge'
+      };
+    }
+    if (shots === 'triple') {
+      return {
+        nameJa: 'グリーンアイ',
+        nameEn: 'Green Eye',
+        fullNameJa: 'グリーンアイ (Green Eye)',
+        fullNameEn: 'Green Eye (グリーンアイ)',
+        noteJa: 'ドリップコーヒー＋エスプレッソ3ショット',
+        noteEn: 'Drip Coffee + 3 Espresso Shots'
+      };
+    }
+  } else if (drinkId === 'chai_tea_latte') {
+    if (shots === 'single' || shots === 'double' || shots === 'triple' || shots === 'quad') {
+      return {
+        nameJa: 'ダーティーチャイ',
+        nameEn: 'Dirty Chai',
+        fullNameJa: 'ダーティーチャイ (Dirty Chai)',
+        fullNameEn: 'Dirty Chai (ダーティーチャイ)',
+        noteJa: 'チャイティーラテにエスプレッソを追加した人気の濃厚カスタム',
+        noteEn: 'Chai Tea Latte with espresso added'
+      };
+    }
+  } else if (drinkId === 'matcha_tea_latte' || drinkId === 'matcha_frap') {
+    if (shots === 'single' || shots === 'double' || shots === 'triple' || shots === 'quad') {
+      return {
+        nameJa: 'ダーティーマッチャ',
+        nameEn: 'Dirty Matcha',
+        fullNameJa: 'ダーティーマッチャ (Dirty Matcha)',
+        fullNameEn: 'Dirty Matcha (ダーティーマッチャ)',
+        noteJa: '抹茶ラテにエスプレッソを追加したビターな人気カスタム',
+        noteEn: 'Matcha Latte with espresso added'
+      };
+    }
+  }
+
+  return null;
+}
 
 /**
  * Build Starbucks Order Spell
@@ -1148,12 +1252,19 @@ function compileStarbucksSpell() {
   const mainSpellJa = terms.join(' ');
   const mainSpellEn = termsEn.join(' ');
 
+  const alias = detectStarbucksAlias(sb);
+  if (alias) {
+    const aliasBadgeLabel = isJa ? `🏷️ 通称: ${alias.fullNameJa}` : `🏷️ AKA: ${alias.fullNameEn}`;
+    breakdown.unshift({ label: aliasBadgeLabel, hl: true });
+  }
+
   return {
     mainSpell: isJa ? mainSpellJa : mainSpellEn,
     phonetic: isJa ? mainSpellJa : `Japanese: 「${mainSpellJa}」`,
     ticketText: '',
     breakdown: breakdown,
-    metrics: calculateStarbucksMetrics(state.starbucks, isJa)
+    metrics: calculateStarbucksMetrics(state.starbucks, isJa),
+    alias: alias
   };
 }
 
@@ -1403,6 +1514,17 @@ function adjustStarbucksVisibility(drink) {
       state.starbucks.whip = 'default';
     }
   }
+
+  // Conditional Shots options:
+  // Drinks without espresso by default (e.g. Drip Coffee, Tea Latte, Frappuccino) don't have "none" (ショット抜き)
+  const shotsGroup = document.querySelector('[data-sb-param="shots"]');
+  if (shotsGroup) {
+    const shotsNoneChip = shotsGroup.querySelector('.chip[data-val="none"]');
+    if (shotsNoneChip) shotsNoneChip.style.display = drink.hasEspresso ? '' : 'none';
+    if (!drink.hasEspresso && state.starbucks.shots === 'none') {
+      state.starbucks.shots = 'standard';
+    }
+  }
 }
 
 /**
@@ -1484,6 +1606,28 @@ function updateSpellDisplay() {
   phoneticEl.textContent = spellData.phonetic;
   mainTextEl.textContent = `「${spellData.mainSpell}」`;
 
+  // Live Card Alias / Nickname Badge
+  const aliasBadgeEl = document.getElementById('spell-alias-badge');
+  const aliasTitleEl = document.getElementById('alias-title');
+  const aliasNoteEl = document.getElementById('alias-note');
+
+  if (aliasBadgeEl && aliasTitleEl && aliasNoteEl) {
+    if (state.mode === 'starbucks' && spellData.alias) {
+      aliasBadgeEl.style.display = 'flex';
+      aliasTitleEl.textContent = state.lang === 'ja' ? spellData.alias.fullNameJa : spellData.alias.fullNameEn;
+      const noteText = state.lang === 'ja' ? spellData.alias.noteJa : spellData.alias.noteEn;
+      if (noteText) {
+        aliasNoteEl.textContent = noteText;
+        aliasNoteEl.style.display = 'block';
+      } else {
+        aliasNoteEl.textContent = '';
+        aliasNoteEl.style.display = 'none';
+      }
+    } else {
+      aliasBadgeEl.style.display = 'none';
+    }
+  }
+
   // Breakdown Badges
   breakdownEl.innerHTML = '';
   spellData.breakdown.forEach(item => {
@@ -1527,6 +1671,17 @@ function updateSpellDisplay() {
     modalDetailsEl.appendChild(ticketRow);
   }
 
+  // Add Alias to modal details if present
+  if (state.mode === 'starbucks' && spellData.alias) {
+    const aliasRow = document.createElement('div');
+    aliasRow.className = 'modal-detail-row';
+    const aliasLabel = state.lang === 'ja' ? '通称' : 'AKA';
+    const aliasVal = state.lang === 'ja' ? spellData.alias.fullNameJa : spellData.alias.fullNameEn;
+    const noteText = state.lang === 'ja' ? spellData.alias.noteJa : spellData.alias.noteEn;
+    aliasRow.innerHTML = `<span>🏷️ ${aliasLabel}:</span><span style="font-weight:900; color:#FFE7BA;">${aliasVal}${noteText ? '<br><small style="font-size:0.75rem; font-weight:normal; opacity:0.85;">' + noteText + '</small>' : ''}</span>`;
+    modalDetailsEl.appendChild(aliasRow);
+  }
+
   // Add Calorie and Index to modal details
   if (spellData.metrics) {
     const calRow = document.createElement('div');
@@ -1557,7 +1712,10 @@ function updateSpellDisplay() {
   }
   if (dockText) {
     const calSnippet = spellData.metrics ? ` (${spellData.metrics.calorieText})` : '';
-    dockText.textContent = `「${spellData.mainSpell}」${calSnippet}`;
+    const aliasSnippet = (state.mode === 'starbucks' && spellData.alias)
+      ? ` [${state.lang === 'ja' ? spellData.alias.nameJa : spellData.alias.nameEn}]`
+      : '';
+    dockText.textContent = `「${spellData.mainSpell}」${aliasSnippet}${calSnippet}`;
   }
 }
 
