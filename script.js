@@ -879,16 +879,43 @@ function compileJiroSpell() {
 /**
  * Build Starbucks Order Spell
  */
+/**
+ * Starbucks Base Shot Map and Barista Calling Abbreviations
+ */
+const STARBUCKS_BASE_SHOTS = {
+  starbucks_latte: { short: 1, tall: 1, grande: 2, venti: 3 },
+  cappuccino: { short: 1, tall: 1, grande: 2, venti: 3 },
+  caffe_mocha: { short: 1, tall: 1, grande: 2, venti: 3 },
+  white_mocha: { short: 1, tall: 1, grande: 2, venti: 3 },
+  caramel_macchiato: { short: 1, tall: 1, grande: 2, venti: 3 },
+  caffe_americano: { short: 1, tall: 2, grande: 3, venti: 4 }
+};
+
+const STARBUCKS_CALL_NAMES = {
+  starbucks_latte: { ja: 'ラテ', en: 'Latte' },
+  cappuccino: { ja: 'カプチーノ', en: 'Cappuccino' },
+  caffe_americano: { ja: 'アメリカーノ', en: 'Americano' },
+  caramel_macchiato: { ja: 'キャラメル マキアート', en: 'Caramel Macchiato' },
+  caffe_mocha: { ja: 'モカ', en: 'Mocha' },
+  white_mocha: { ja: 'ホワイト モカ', en: 'White Mocha' }
+};
+
+/**
+ * Build Starbucks Order Spell
+ * Formats accurately using authentic Starbucks barista calling routine
+ * Order: [Temp] [Decaf/Roast] [Shots] [Size] [Syrup] [Milk] [Custom Toppings] [Drink Calling Name]
+ */
 function compileStarbucksSpell() {
   const sb = state.starbucks;
   const isJa = state.lang === 'ja';
   const drink = STARBUCKS_DRINKS.find(d => d.id === sb.drinkId) || STARBUCKS_DRINKS[0];
+  const isEspresso = drink.hasEspresso;
 
   const terms = [];
   const termsEn = [];
   const breakdown = [];
 
-  // 1. Temperature (if applicable)
+  // 1. Temperature (ホット / アイス)
   if (drink.defaultHotIce === 'both') {
     if (sb.temp === 'hot') {
       terms.push('ホット');
@@ -901,20 +928,78 @@ function compileStarbucksSpell() {
     }
   }
 
-  // 2. Shot count prefix (e.g. トリプル / クアッド or ソロ / ダブル)
-  if (drink.hasEspresso) {
-    if (sb.shots === 'triple') {
-      terms.push('トリプル');
-      termsEn.push('Triple');
-      breakdown.push({ label: isJa ? '☕ 3ショット (トリプル)' : 'Triple Shot', hl: true });
-    } else if (sb.shots === 'quad') {
-      terms.push('クアッド');
-      termsEn.push('Quad');
-      breakdown.push({ label: isJa ? '☕ 4ショット (クアッド)' : 'Quad Shot', hl: true });
+  // 2. Decaf / Roast
+  const hasCoffee = isEspresso || drink.id === 'drip_coffee' || (sb.shots !== 'none' && sb.shots !== 'standard');
+  if (hasCoffee) {
+    if (sb.beans === 'decaf') {
+      terms.push('ディカフェ');
+      termsEn.push('Decaf');
+      breakdown.push({ label: isJa ? '🌱 ディカフェ (カフェインレス)' : 'Decaf', hl: true });
+    } else if (sb.beans === 'blonde') {
+      terms.push('ブロンド');
+      termsEn.push('Blonde Roast');
+      breakdown.push({ label: isJa ? '🌾 ブロンドロースト' : 'Blonde Roast', hl: false });
+    } else if (sb.beans === 'ristretto' && (isEspresso || (sb.shots !== 'none' && sb.shots !== 'standard'))) {
+      terms.push('リストレット');
+      termsEn.push('Ristretto');
+      breakdown.push({ label: isJa ? '☕ リストレット抽出' : 'Ristretto', hl: false });
     }
   }
 
-  // 3. Size
+  // 3. Shots for Espresso Drinks (ソロ / ダブル / トリプル / クアッド)
+  // In barista calling, shot modifiers precede the cup size! e.g. ホット [ダブル] [トール] [ラテ]
+  if (isEspresso) {
+    const baseShots = (STARBUCKS_BASE_SHOTS[drink.id] && STARBUCKS_BASE_SHOTS[drink.id][sb.size]) || 1;
+    let totalShots = baseShots;
+    let isModified = false;
+
+    if (sb.shots === 'none') {
+      totalShots = 0;
+      isModified = true;
+    } else if (sb.shots === 'single') {
+      totalShots = baseShots + 1;
+      isModified = true;
+    } else if (sb.shots === 'double') {
+      totalShots = baseShots + 2;
+      isModified = true;
+    } else if (sb.shots === 'triple') {
+      totalShots = 3;
+      isModified = true;
+    } else if (sb.shots === 'quad') {
+      totalShots = 4;
+      isModified = true;
+    }
+
+    if (isModified) {
+      if (totalShots === 0) {
+        terms.push('ノンエスプレッソ');
+        termsEn.push('Non-Espresso');
+        breakdown.push({ label: isJa ? '🚫 ショット抜き (ノンエスプレッソ)' : 'Non-Espresso', hl: false });
+      } else if (totalShots === 1) {
+        terms.push('ソロ');
+        termsEn.push('Solo');
+        breakdown.push({ label: isJa ? '☕ 1ショット (ソロ)' : 'Solo Shot (1)', hl: true });
+      } else if (totalShots === 2) {
+        terms.push('ダブル');
+        termsEn.push('Double');
+        breakdown.push({ label: isJa ? '☕ 2ショット (ダブル)' : 'Double Shot (2)', hl: true });
+      } else if (totalShots === 3) {
+        terms.push('トリプル');
+        termsEn.push('Triple');
+        breakdown.push({ label: isJa ? '☕ 3ショット (トリプル)' : 'Triple Shot (3)', hl: true });
+      } else if (totalShots === 4) {
+        terms.push('クアッド');
+        termsEn.push('Quad');
+        breakdown.push({ label: isJa ? '☕ 4ショット (クアッド)' : 'Quad Shot (4)', hl: true });
+      } else {
+        terms.push(`${totalShots}ショット`);
+        termsEn.push(`${totalShots} Shots`);
+        breakdown.push({ label: isJa ? `☕ ${totalShots}ショット` : `${totalShots} Shots`, hl: true });
+      }
+    }
+  }
+
+  // 4. Cup Size
   const sizeMap = {
     short: { ja: 'ショート', en: 'Short' },
     tall: { ja: 'トール', en: 'Tall' },
@@ -925,56 +1010,53 @@ function compileStarbucksSpell() {
   termsEn.push(sizeMap[sb.size].en);
   breakdown.push({ label: `📏 ${isJa ? sizeMap[sb.size].ja : sizeMap[sb.size].en}`, hl: false });
 
-  // 4. Custom Milk
+  // 5. Syrups
+  if (sb.syrup !== 'default') {
+    const isValidSyrup = drink.hasSyrup || (sb.syrup !== 'none' && sb.syrup !== 'extra' && sb.syrup !== 'light');
+    if (isValidSyrup) {
+      const syrupMap = {
+        vanilla: { ja: isEspresso ? 'バニラ' : 'バニラシロップ追加', en: isEspresso ? 'Vanilla' : 'Add Vanilla Syrup' },
+        caramel: { ja: isEspresso ? 'キャラメル' : 'キャラメルシロップ追加', en: isEspresso ? 'Caramel' : 'Add Caramel Syrup' },
+        whitemocha: { ja: isEspresso ? 'ホワイトモカ' : 'ホワイトモカシロップ追加', en: isEspresso ? 'White Mocha' : 'Add White Mocha Syrup' },
+        extra: { ja: 'エクストラシロップ', en: 'Extra Syrup' },
+        light: { ja: 'ライトシロップ', en: 'Light Syrup' },
+        none: { ja: 'ノンシロップ', en: 'No Syrup' }
+      };
+      terms.push(syrupMap[sb.syrup].ja);
+      termsEn.push(syrupMap[sb.syrup].en);
+      breakdown.push({
+        label: `🍯 ${isJa ? (sb.syrup === 'whitemocha' ? 'ホワイトモカシロップ追加' : sb.syrup === 'vanilla' ? 'バニラシロップ追加' : sb.syrup === 'caramel' ? 'キャラメルシロップ追加' : syrupMap[sb.syrup].ja) : (sb.syrup === 'whitemocha' ? 'Add White Mocha Syrup' : sb.syrup === 'vanilla' ? 'Add Vanilla Syrup' : sb.syrup === 'caramel' ? 'Add Caramel Syrup' : syrupMap[sb.syrup].en)}`,
+        hl: true
+      });
+    }
+  }
+
+  // 6. Milk
   if (sb.milk !== 'regular') {
-    const milkMap = {
-      lowfat: { ja: '低脂肪タイプ', en: 'Low-Fat Milk' },
-      nonfat: { ja: 'ノンファット', en: 'Non-Fat Milk' },
-      soy: { ja: 'ソイミルク変更', en: 'Soy Milk' },
-      almond: { ja: 'アーモンドミルク変更', en: 'Almond Milk' },
-      oat: { ja: 'オーツミルク変更', en: 'Oat Milk' },
-      breve: { ja: 'ブレベミルク変更', en: 'Breve Milk' }
-    };
+    const milkMap = isEspresso
+      ? {
+          lowfat: { ja: '低脂肪', en: 'Low-Fat' },
+          nonfat: { ja: 'ノンファット', en: 'Non-Fat' },
+          soy: { ja: 'ソイ', en: 'Soy' },
+          almond: { ja: 'アーモンド', en: 'Almond' },
+          oat: { ja: 'オーツ', en: 'Oat' },
+          breve: { ja: 'ブレベ', en: 'Breve' }
+        }
+      : {
+          lowfat: { ja: '低脂肪タイプ', en: 'Low-Fat Milk' },
+          nonfat: { ja: 'ノンファット', en: 'Non-Fat Milk' },
+          soy: { ja: 'ソイミルク変更', en: 'Soy Milk' },
+          almond: { ja: 'アーモンドミルク変更', en: 'Almond Milk' },
+          oat: { ja: 'オーツミルク変更', en: 'Oat Milk' },
+          breve: { ja: 'ブレベミルク変更', en: 'Breve Milk' }
+        };
     terms.push(milkMap[sb.milk].ja);
     termsEn.push(milkMap[sb.milk].en);
     breakdown.push({ label: `🥛 ${isJa ? milkMap[sb.milk].ja : milkMap[sb.milk].en}`, hl: true });
   }
 
-  // 5. Decaf / Roast
-  const hasCoffee = drink.hasEspresso || drink.id === 'drip_coffee' || (sb.shots !== 'none' && sb.shots !== 'standard');
-  if (hasCoffee) {
-    if (sb.beans === 'decaf') {
-      terms.push('ディカフェ');
-      termsEn.push('Decaf');
-      breakdown.push({ label: isJa ? '🌱 ディカフェ (カフェインレス)' : 'Decaf', hl: true });
-    } else if (sb.beans === 'blonde') {
-      terms.push('ブロンド');
-      termsEn.push('Blonde Roast');
-      breakdown.push({ label: isJa ? '🌾 ブロンドロースト' : 'Blonde Roast', hl: false });
-    } else if (sb.beans === 'ristretto' && (drink.hasEspresso || (sb.shots !== 'none' && sb.shots !== 'standard'))) {
-      terms.push('リストレット');
-      termsEn.push('Ristretto');
-      breakdown.push({ label: isJa ? '☕ リストレット抽出' : 'Ristretto', hl: false });
-    }
-  }
-
-  // 6. Shot addition / modification
-  if (drink.hasEspresso) {
-    if (sb.shots === 'none') {
-      terms.push('ショット抜き');
-      termsEn.push('No Espresso Shot');
-      breakdown.push({ label: isJa ? '🚫 ショット抜き' : 'No Shot', hl: false });
-    } else if (sb.shots === 'single') {
-      terms.push('ワンショット追加');
-      termsEn.push('Add 1 Shot');
-      breakdown.push({ label: isJa ? '☕ +1ショット追加' : '+1 Shot', hl: true });
-    } else if (sb.shots === 'double') {
-      terms.push('ダブルショット追加');
-      termsEn.push('Add 2 Shots (Doppio)');
-      breakdown.push({ label: isJa ? '☕ +2ショット追加' : '+2 Shots', hl: true });
-    }
-  } else {
-    // Drinks that do not originally have espresso (Drip Coffee, Tea Latte, Frappuccino, etc.)
+  // 7. Shot additions for Non-Espresso Drinks (Drip Coffee, Tea Latte, Frappuccino)
+  if (!isEspresso) {
     if (sb.shots === 'single') {
       terms.push('ワンショット追加');
       termsEn.push('Add 1 Shot');
@@ -994,30 +1076,7 @@ function compileStarbucksSpell() {
     }
   }
 
-  // 7. Syrups
-  if (sb.syrup !== 'default') {
-    const isValidSyrup = drink.hasSyrup || (sb.syrup !== 'none' && sb.syrup !== 'extra' && sb.syrup !== 'light');
-    if (isValidSyrup) {
-      const syrupMap = {
-        vanilla: { ja: 'バニラシロップ追加', en: 'Add Vanilla Syrup' },
-        caramel: { ja: 'キャラメルシロップ追加', en: 'Add Caramel Syrup' },
-        whitemocha: { ja: 'ホワイトモカシロップ追加', en: 'Add White Mocha Syrup' },
-        extra: { ja: 'エクストラシロップ', en: 'Extra Syrup' },
-        light: { ja: 'ライトシロップ', en: 'Light Syrup' },
-        none: { ja: 'ノンシロップ', en: 'No Syrup' }
-      };
-      terms.push(syrupMap[sb.syrup].ja);
-      termsEn.push(syrupMap[sb.syrup].en);
-      breakdown.push({ label: `🍯 ${isJa ? syrupMap[sb.syrup].ja : syrupMap[sb.syrup].en}`, hl: true });
-    }
-  }
-
-  // 8. Drink Base Name
-  terms.push(drink.ja);
-  termsEn.push(drink.en);
-  breakdown.push({ label: `☕ ${isJa ? drink.ja : drink.en}`, hl: false });
-
-  // 9. Whipped cream
+  // 8. Whipped Cream
   if (sb.whip !== 'default') {
     const whipMap = {
       extra: { ja: 'エクストラホイップ', en: 'Extra Whip' },
@@ -1030,7 +1089,7 @@ function compileStarbucksSpell() {
     breakdown.push({ label: `🍦 ${isJa ? whipMap[sb.whip].ja : whipMap[sb.whip].en}`, hl: true });
   }
 
-  // 10. Drizzle / Sauce
+  // 9. Drizzle / Sauce
   if (sb.drizzle !== 'none') {
     const drizzleMap = {
       caramel: { ja: 'キャラメルソース追加', en: 'Caramel Drizzle' },
@@ -1041,6 +1100,23 @@ function compileStarbucksSpell() {
     terms.push(drizzleMap[sb.drizzle].ja);
     termsEn.push(drizzleMap[sb.drizzle].en);
     breakdown.push({ label: `✨ ${isJa ? drizzleMap[sb.drizzle].ja : drizzleMap[sb.drizzle].en}`, hl: true });
+  }
+
+  // 10. Frappuccino custom
+  if (drink.category === 'frappuccino') {
+    if (sb.frapcustom === 'extrapowder') {
+      terms.push('エクストラパウダー');
+      termsEn.push('Extra Powder');
+      breakdown.push({ label: isJa ? '🍵 エクストラパウダー' : 'Extra Powder', hl: true });
+    } else if (sb.frapcustom === 'chocolatechip') {
+      terms.push('チョコチップ追加');
+      termsEn.push('Add Chocolate Chips');
+      breakdown.push({ label: isJa ? '🍫 チョコチップ追加' : 'Add Choc Chips', hl: true });
+    } else if (sb.frapcustom === 'allcustom') {
+      terms.push('エクストラパウダー チョコチップ追加');
+      termsEn.push('Extra Powder & Choc Chips');
+      breakdown.push({ label: isJa ? '🍫 エクストラパウダー & チョコチップ追加' : 'Extra Powder & Choc Chips', hl: true });
+    }
   }
 
   // 11. Ice / Milk Ratio (Iced drinks only)
@@ -1060,22 +1136,14 @@ function compileStarbucksSpell() {
     }
   }
 
-  // 12. Frappuccino custom
-  if (drink.category === 'frappuccino') {
-    if (sb.frapcustom === 'extrapowder') {
-      terms.push('エクストラパウダー');
-      termsEn.push('Extra Powder');
-      breakdown.push({ label: isJa ? '🍵 エクストラパウダー' : 'Extra Powder', hl: true });
-    } else if (sb.frapcustom === 'chocolatechip') {
-      terms.push('チョコチップ追加');
-      termsEn.push('Add Chocolate Chips');
-      breakdown.push({ label: isJa ? '🍫 チョコチップ追加' : 'Add Choc Chips', hl: true });
-    } else if (sb.frapcustom === 'allcustom') {
-      terms.push('エクストラパウダー チョコチップ追加');
-      termsEn.push('Extra Powder & Choc Chips');
-      breakdown.push({ label: isJa ? '🍫 エクストラパウダー & チョコチップ追加' : 'Extra Powder & Choc Chips', hl: true });
-    }
-  }
+  // 12. Drink Calling Name
+  const callName = isEspresso && STARBUCKS_CALL_NAMES[drink.id]
+    ? STARBUCKS_CALL_NAMES[drink.id]
+    : { ja: drink.ja, en: drink.en };
+
+  terms.push(callName.ja);
+  termsEn.push(callName.en);
+  breakdown.push({ label: `☕ ${isJa ? callName.ja : callName.en}`, hl: false });
 
   const mainSpellJa = terms.join(' ');
   const mainSpellEn = termsEn.join(' ');
