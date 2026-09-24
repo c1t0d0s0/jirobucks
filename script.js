@@ -639,8 +639,8 @@ function calculateStarbucksMetrics(sbState, isJa) {
 
   if (sbState.syrup === 'vanilla' || sbState.syrup === 'caramel') cal += 20;
   else if (sbState.syrup === 'whitemocha') cal += 50;
-  else if (sbState.syrup === 'extra') cal += 35;
-  else if (sbState.syrup === 'light') cal -= 20;
+  else if (sbState.syrup === 'extra' && drink.hasSyrup) cal += 35;
+  else if (sbState.syrup === 'light' && drink.hasSyrup) cal -= 20;
   else if (sbState.syrup === 'none' && drink.hasSyrup) cal -= 50;
 
   if (drink.hasWhip) {
@@ -996,17 +996,20 @@ function compileStarbucksSpell() {
 
   // 7. Syrups
   if (sb.syrup !== 'default') {
-    const syrupMap = {
-      vanilla: { ja: 'バニラシロップ追加', en: 'Add Vanilla Syrup' },
-      caramel: { ja: 'キャラメルシロップ追加', en: 'Add Caramel Syrup' },
-      whitemocha: { ja: 'ホワイトモカシロップ追加', en: 'Add White Mocha Syrup' },
-      extra: { ja: 'エクストラシロップ', en: 'Extra Syrup' },
-      light: { ja: 'ライトシロップ', en: 'Light Syrup' },
-      none: { ja: 'ノンシロップ', en: 'No Syrup' }
-    };
-    terms.push(syrupMap[sb.syrup].ja);
-    termsEn.push(syrupMap[sb.syrup].en);
-    breakdown.push({ label: `🍯 ${isJa ? syrupMap[sb.syrup].ja : syrupMap[sb.syrup].en}`, hl: true });
+    const isValidSyrup = drink.hasSyrup || (sb.syrup !== 'none' && sb.syrup !== 'extra' && sb.syrup !== 'light');
+    if (isValidSyrup) {
+      const syrupMap = {
+        vanilla: { ja: 'バニラシロップ追加', en: 'Add Vanilla Syrup' },
+        caramel: { ja: 'キャラメルシロップ追加', en: 'Add Caramel Syrup' },
+        whitemocha: { ja: 'ホワイトモカシロップ追加', en: 'Add White Mocha Syrup' },
+        extra: { ja: 'エクストラシロップ', en: 'Extra Syrup' },
+        light: { ja: 'ライトシロップ', en: 'Light Syrup' },
+        none: { ja: 'ノンシロップ', en: 'No Syrup' }
+      };
+      terms.push(syrupMap[sb.syrup].ja);
+      termsEn.push(syrupMap[sb.syrup].en);
+      breakdown.push({ label: `🍯 ${isJa ? syrupMap[sb.syrup].ja : syrupMap[sb.syrup].en}`, hl: true });
+    }
   }
 
   // 8. Drink Base Name
@@ -1276,21 +1279,61 @@ function adjustStarbucksVisibility(drink) {
   const milkField = document.getElementById('sb-milk-field');
 
   if (drink.category === 'frappuccino') {
-    frapField.style.display = 'block';
-    tempField.style.display = 'none';
-    iceField.style.display = 'none';
+    if (frapField) frapField.style.display = 'block';
+    if (tempField) tempField.style.display = 'none';
+    if (iceField) iceField.style.display = 'none';
     state.starbucks.temp = 'iced';
   } else {
-    frapField.style.display = 'none';
-    tempField.style.display = 'block';
-    iceField.style.display = state.starbucks.temp === 'iced' ? 'block' : 'none';
+    if (frapField) frapField.style.display = 'none';
+    if (tempField) tempField.style.display = 'block';
+    if (iceField) iceField.style.display = state.starbucks.temp === 'iced' ? 'block' : 'none';
   }
 
   // Drip coffee doesn't have milk/shots by default unless customized
   if (drink.id === 'drip_coffee') {
-    milkField.style.display = 'none';
+    if (milkField) milkField.style.display = 'none';
   } else {
-    milkField.style.display = 'block';
+    if (milkField) milkField.style.display = 'block';
+  }
+
+  // Conditional Syrup options:
+  // Drinks without syrup by default (e.g. Drip Coffee, Latte, Cappuccino, Americano) cannot choose "none" (ノンシロップ), "extra", or "light"
+  const syrupGroup = document.querySelector('[data-sb-param="syrup"]');
+  if (syrupGroup) {
+    const syrupNoneChip = syrupGroup.querySelector('.chip[data-val="none"]');
+    const syrupExtraChip = syrupGroup.querySelector('.chip[data-val="extra"]');
+    const syrupLightChip = syrupGroup.querySelector('.chip[data-val="light"]');
+
+    if (syrupNoneChip) syrupNoneChip.style.display = drink.hasSyrup ? '' : 'none';
+    if (syrupExtraChip) syrupExtraChip.style.display = drink.hasSyrup ? '' : 'none';
+    if (syrupLightChip) syrupLightChip.style.display = drink.hasSyrup ? '' : 'none';
+
+    // If a drink without syrup has an invalid syrup state, reset to 'default'
+    if (!drink.hasSyrup && (state.starbucks.syrup === 'none' || state.starbucks.syrup === 'extra' || state.starbucks.syrup === 'light')) {
+      state.starbucks.syrup = 'default';
+    }
+  }
+
+  // Conditional Whip options:
+  // Drinks with whip by default can choose extra/light/none, but not add (+55 yen)
+  // Drinks without whip by default can choose default or add, but not extra/light/none
+  const whipGroup = document.querySelector('[data-sb-param="whip"]');
+  if (whipGroup) {
+    const whipExtraChip = whipGroup.querySelector('.chip[data-val="extra"]');
+    const whipLightChip = whipGroup.querySelector('.chip[data-val="light"]');
+    const whipNoneChip = whipGroup.querySelector('.chip[data-val="none"]');
+    const whipAddChip = whipGroup.querySelector('.chip[data-val="add"]');
+
+    if (whipExtraChip) whipExtraChip.style.display = drink.hasWhip ? '' : 'none';
+    if (whipLightChip) whipLightChip.style.display = drink.hasWhip ? '' : 'none';
+    if (whipNoneChip) whipNoneChip.style.display = drink.hasWhip ? '' : 'none';
+    if (whipAddChip) whipAddChip.style.display = drink.hasWhip ? 'none' : '';
+
+    if (!drink.hasWhip && (state.starbucks.whip === 'none' || state.starbucks.whip === 'extra' || state.starbucks.whip === 'light')) {
+      state.starbucks.whip = 'default';
+    } else if (drink.hasWhip && state.starbucks.whip === 'add') {
+      state.starbucks.whip = 'default';
+    }
   }
 }
 
@@ -1322,7 +1365,9 @@ function syncJiroChips() {
  */
 function syncStarbucksChips() {
   const sb = state.starbucks;
-  
+  const currentDrink = STARBUCKS_DRINKS.find(d => d.id === sb.drinkId) || STARBUCKS_DRINKS[0];
+  adjustStarbucksVisibility(currentDrink);
+
   // Category chips
   document.querySelectorAll('#sb-category-chips .chip').forEach(c => {
     if (c.getAttribute('data-cat') === sb.category) {
@@ -1353,9 +1398,6 @@ function syncStarbucksChips() {
       }
     });
   });
-
-  const currentDrink = STARBUCKS_DRINKS.find(d => d.id === sb.drinkId) || STARBUCKS_DRINKS[0];
-  adjustStarbucksVisibility(currentDrink);
 }
 
 /**
