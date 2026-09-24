@@ -20,6 +20,10 @@ Both **Ramen Jiro (ラーメン二郎)** and **Starbucks (スターバックス)
 - **Dual-Mode System**:
   - **🍜 Ramen Jiro Mode**: Customize noodle firmness & amount (at ticket presentation) and toppings (garlic, veggies, pork fat, soy tare). Supports abbreviations like *Zen-mashi* and *Zen-mashimashi*.
   - **☕ Starbucks Mode**: Customize size, temperature, milk alternatives, decaf/espresso shots, syrups, whipped cream, drizzles, and Frappuccino toppings. Formats naturally into authentic barista-preferred order sequences.
+- **🔥 Estimated Calories & Mode-Specific Index**:
+  - Automatically calculates real-time estimated calories (`~1,570 kcal`) based on selected toppings or syrup/milk ratios.
+  - **Jiro Mode**: Evaluates guilt level (`Guilty Level: ★★★☆☆ (Authentic Jiro)` to `★★★★★ (Guilt Overload)`).
+  - **Starbucks Mode**: Evaluates healthiness (`Diet Index: ★★★★☆ (Light & Clean)` to `★☆☆☆☆ (Decadent Treat)`).
 - **📱 "Show to Staff" Fullscreen Mode (店員に見せる)**:
   - Displays your order in ultra-large, high-contrast text on a clean card. Perfect for showing your smartphone screen across the counter without speaking!
 - **⚡ 1-Tap Quick Presets**:

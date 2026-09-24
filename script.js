@@ -76,6 +76,7 @@ const I18N = {
     btnShare: 'シェア',
     btnViewSpell: '呪文を見る',
     btnDismissSpell: '▼ 閉じて選択に戻る',
+    metricCalorieLabel: '推定:',
     guideTitleJiro: '【初心者必読】ラーメン二郎の入店・注文ルールとマナー',
     guideTitleBucks: '【スタバ初心者向け】サイズ一覧とカスタムの基礎知識',
     modalBadge: '店員さんにお見せください',
@@ -231,6 +232,7 @@ const I18N = {
     btnShare: 'Share',
     btnViewSpell: 'View Spell',
     btnDismissSpell: '▼ Close (Back to options)',
+    metricCalorieLabel: 'Est:',
     guideTitleJiro: '【Beginner Guide】Ramen Jiro Etiquette & Ordering Rules',
     guideTitleBucks: '【Beginner Guide】Starbucks Sizes & Customization Basics',
     modalBadge: 'Please show this screen to the staff',
@@ -517,6 +519,195 @@ const state = {
 // ==========================================================================
 
 /**
+ * Calculate Jiro Calories & Guilty Level
+ */
+function calculateJiroMetrics(jiroState, isJa) {
+  let calories = 1550;
+
+  // Noodle amount
+  if (jiroState.noodleAmount === 'less') calories -= 180;
+  else if (jiroState.noodleAmount === 'half') calories -= 320;
+  else if (jiroState.noodleAmount === 'third') calories -= 420;
+
+  // Garlic
+  if (jiroState.garlic === 'none') calories -= 15;
+  else if (jiroState.garlic === 'less') calories += 10;
+  else if (jiroState.garlic === 'normal') calories += 20;
+  else if (jiroState.garlic === 'mashi') calories += 45;
+  else if (jiroState.garlic === 'mashimashi') calories += 80;
+
+  // Yasai
+  if (jiroState.yasai === 'none') calories -= 35;
+  else if (jiroState.yasai === 'less') calories -= 20;
+  else if (jiroState.yasai === 'mashi') calories += 35;
+  else if (jiroState.yasai === 'mashimashi') calories += 70;
+
+  // Abura (Pork fat)
+  if (jiroState.abura === 'none') calories -= 180;
+  else if (jiroState.abura === 'less') calories -= 90;
+  else if (jiroState.abura === 'mashi') calories += 240;
+  else if (jiroState.abura === 'mashimashi') calories += 480;
+
+  // Karame
+  if (jiroState.karame === 'karame') calories += 25;
+  else if (jiroState.karame === 'karakara') calories += 50;
+
+  calories = Math.round(calories / 10) * 10;
+
+  let stars = '★★★☆☆';
+  let desc = isJa ? '本格二郎' : 'Authentic Jiro';
+  let icon = '😈';
+
+  if (calories < 1150) {
+    stars = '★☆☆☆☆';
+    desc = isJa ? '天使の二郎' : 'Angelic Light';
+    icon = '😇';
+  } else if (calories <= 1450) {
+    stars = '★★☆☆☆';
+    desc = isJa ? 'ギルティ控えめ' : 'Mild Guilty';
+    icon = '🙂';
+  } else if (calories <= 1750) {
+    stars = '★★★☆☆';
+    desc = isJa ? '本格二郎' : 'Authentic Jiro';
+    icon = '😈';
+  } else if (calories <= 2050) {
+    stars = '★★★★☆';
+    desc = isJa ? '本格ギルティ' : 'Heavy Guilty';
+    icon = '🔥';
+  } else {
+    stars = '★★★★★';
+    desc = isJa ? 'ギルティ限界突破' : 'Max Transcendence';
+    icon = '💥';
+  }
+
+  return {
+    calories,
+    calorieText: isJa ? `約 ${calories.toLocaleString()} kcal` : `~${calories.toLocaleString()} kcal`,
+    indexTitle: isJa ? 'ギルティ度:' : 'Guilty Level:',
+    indexValue: stars,
+    indexDesc: `(${desc})`,
+    indexIcon: icon
+  };
+}
+
+/**
+ * Calculate Starbucks Calories & Diet Index
+ */
+function calculateStarbucksMetrics(sbState, isJa) {
+  const drink = STARBUCKS_DRINKS.find(d => d.id === sbState.drinkId) || STARBUCKS_DRINKS[0];
+
+  const baseMap = {
+    starbucks_latte: { hot: 223, iced: 125 },
+    cappuccino: { hot: 113, iced: 113 },
+    caffe_americano: { hot: 11, iced: 11 },
+    caramel_macchiato: { hot: 208, iced: 200 },
+    caffe_mocha: { hot: 391, iced: 250 },
+    white_mocha: { hot: 401, iced: 260 },
+    dark_mocha_frap: { iced: 341 },
+    matcha_frap: { iced: 322 },
+    caramel_frap: { iced: 302 },
+    vanilla_frap: { iced: 255 },
+    chai_tea_latte: { hot: 220, iced: 198 },
+    hojicha_tea_latte: { hot: 162, iced: 140 },
+    drip_coffee: { hot: 18, iced: 10 }
+  };
+
+  const drinkCal = baseMap[drink.id] || { hot: 180, iced: 150 };
+  let cal = (sbState.temp === 'iced' || drink.defaultHotIce === 'iced') ? (drinkCal.iced || drinkCal.hot) : (drinkCal.hot || drinkCal.iced);
+
+  const sizeMult = { short: 0.72, tall: 1.0, grande: 1.35, venti: 1.70 }[sbState.size] || 1.0;
+  cal = cal * sizeMult;
+
+  const hasMilk = drink.id !== 'drip_coffee' && (drink.id !== 'caffe_americano' || sbState.milk !== 'regular');
+  if (hasMilk && sbState.milk !== 'regular') {
+    const milkDelta = {
+      lowfat: -30,
+      nonfat: -60,
+      soy: -12,
+      almond: -65,
+      oat: -18,
+      breve: 340
+    }[sbState.milk] || 0;
+    cal += milkDelta * sizeMult;
+  }
+
+  if (sbState.shots === 'none' && drink.hasEspresso) cal -= 5;
+  else if (sbState.shots === 'single') cal += 5;
+  else if (sbState.shots === 'double') cal += 10;
+  else if (sbState.shots === 'triple') cal += 15;
+  else if (sbState.shots === 'quad') cal += 20;
+
+  if (sbState.syrup === 'vanilla' || sbState.syrup === 'caramel') cal += 20;
+  else if (sbState.syrup === 'whitemocha') cal += 50;
+  else if (sbState.syrup === 'extra') cal += 35;
+  else if (sbState.syrup === 'light') cal -= 20;
+  else if (sbState.syrup === 'none' && drink.hasSyrup) cal -= 50;
+
+  if (drink.hasWhip) {
+    if (sbState.whip === 'none') cal -= 82;
+    else if (sbState.whip === 'light') cal -= 40;
+    else if (sbState.whip === 'extra') cal += 45;
+  } else {
+    if (sbState.whip === 'add') cal += 82;
+    else if (sbState.whip === 'extra') cal += 125;
+    else if (sbState.whip === 'light') cal += 40;
+  }
+
+  if (sbState.drizzle === 'caramel' || sbState.drizzle === 'chocolate') cal += 15;
+  else if (sbState.drizzle === 'both') cal += 30;
+  else if (sbState.drizzle === 'honey') cal += 20;
+
+  if (sbState.temp === 'iced' && drink.category !== 'frappuccino') {
+    if (sbState.icemilk === 'lightice-extramilk') cal += 25;
+    else if (sbState.icemilk === 'noice') cal += 40;
+    else if (sbState.icemilk === 'extraice') cal -= 15;
+  }
+
+  if (drink.category === 'frappuccino') {
+    if (sbState.frapcustom === 'extrapowder') cal += 15;
+    else if (sbState.frapcustom === 'chocolatechip') cal += 80;
+    else if (sbState.frapcustom === 'allcustom') cal += 95;
+  }
+
+  cal = Math.max(5, Math.round(cal));
+
+  let stars = '★★★☆☆';
+  let desc = isJa ? 'バランス良好' : 'Balanced';
+  let icon = '☕';
+
+  if (cal <= 80) {
+    stars = '★★★★★';
+    desc = isJa ? '超ヘルシー' : 'Ultra Light';
+    icon = '🥗';
+  } else if (cal <= 175) {
+    stars = '★★★★☆';
+    desc = isJa ? 'すっきり軽やか' : 'Clean & Light';
+    icon = '🌿';
+  } else if (cal <= 285) {
+    stars = '★★★☆☆';
+    desc = isJa ? 'バランス良好' : 'Balanced';
+    icon = '☕';
+  } else if (cal <= 420) {
+    stars = '★★☆☆☆';
+    desc = isJa ? 'ちょっぴりご褒美' : 'Sweet Treat';
+    icon = '🍮';
+  } else {
+    stars = '★☆☆☆☆';
+    desc = isJa ? '悪魔的リッチ' : 'Devilishly Rich';
+    icon = '🍰';
+  }
+
+  return {
+    calories: cal,
+    calorieText: isJa ? `約 ${cal.toLocaleString()} kcal` : `~${cal.toLocaleString()} kcal`,
+    indexTitle: isJa ? 'ダイエット指数:' : 'Diet Index:',
+    indexValue: stars,
+    indexDesc: `(${desc})`,
+    indexIcon: icon
+  };
+}
+
+/**
  * Build Jiro Call
  */
 function compileJiroSpell() {
@@ -680,7 +871,8 @@ function compileJiroSpell() {
     mainSpell: callJa,
     phonetic: callPhonetic,
     ticketText: isJa ? ticketStrJa : ticketStrEn,
-    breakdown: callBreakdown
+    breakdown: callBreakdown,
+    metrics: calculateJiroMetrics(state.jiro, isJa)
   };
 }
 
@@ -869,7 +1061,8 @@ function compileStarbucksSpell() {
     mainSpell: isJa ? mainSpellJa : mainSpellEn,
     phonetic: isJa ? mainSpellJa : `Japanese: 「${mainSpellJa}」`,
     ticketText: '',
-    breakdown: breakdown
+    breakdown: breakdown,
+    metrics: calculateStarbucksMetrics(state.starbucks, isJa)
   };
 }
 
@@ -1170,6 +1363,29 @@ function updateSpellDisplay() {
     breakdownEl.appendChild(span);
   });
 
+  // Update Live Card Metrics Panel
+  const calorieValEl = document.getElementById('metric-calorie-val');
+  const indexTitleEl = document.getElementById('metric-index-title');
+  const indexValEl = document.getElementById('metric-index-val');
+  const indexDescEl = document.getElementById('metric-index-desc');
+  const indexIconEl = document.getElementById('metric-index-icon');
+
+  if (calorieValEl && spellData.metrics) {
+    calorieValEl.textContent = spellData.metrics.calorieText;
+  }
+  if (indexTitleEl && spellData.metrics) {
+    indexTitleEl.textContent = spellData.metrics.indexTitle;
+  }
+  if (indexValEl && spellData.metrics) {
+    indexValEl.textContent = spellData.metrics.indexValue;
+  }
+  if (indexDescEl && spellData.metrics) {
+    indexDescEl.textContent = spellData.metrics.indexDesc;
+  }
+  if (indexIconEl && spellData.metrics) {
+    indexIconEl.textContent = spellData.metrics.indexIcon;
+  }
+
   // Modal
   modalTextEl.textContent = spellData.mainSpell;
   modalDetailsEl.innerHTML = '';
@@ -1179,6 +1395,19 @@ function updateSpellDisplay() {
     ticketRow.className = 'modal-detail-row';
     ticketRow.innerHTML = `<span>${state.lang === 'ja' ? '食券提出時' : 'Ticket Hand-in'}:</span><span>${spellData.ticketText}</span>`;
     modalDetailsEl.appendChild(ticketRow);
+  }
+
+  // Add Calorie and Index to modal details
+  if (spellData.metrics) {
+    const calRow = document.createElement('div');
+    calRow.className = 'modal-detail-row';
+    calRow.innerHTML = `<span>🔥 ${state.lang === 'ja' ? '推定エネルギー' : 'Est. Calories'}:</span><span style="font-weight:900;">${spellData.metrics.calorieText}</span>`;
+    modalDetailsEl.appendChild(calRow);
+
+    const idxRow = document.createElement('div');
+    idxRow.className = 'modal-detail-row';
+    idxRow.innerHTML = `<span>${spellData.metrics.indexIcon} ${spellData.metrics.indexTitle}</span><span style="font-weight:900;">${spellData.metrics.indexValue} ${spellData.metrics.indexDesc}</span>`;
+    modalDetailsEl.appendChild(idxRow);
   }
 
   spellData.breakdown.forEach(item => {
@@ -1197,7 +1426,8 @@ function updateSpellDisplay() {
       : (state.lang === 'ja' ? 'スタバ注文呪文' : 'Starbucks Order');
   }
   if (dockText) {
-    dockText.textContent = `「${spellData.mainSpell}」`;
+    const calSnippet = spellData.metrics ? ` (${spellData.metrics.calorieText})` : '';
+    dockText.textContent = `「${spellData.mainSpell}」${calSnippet}`;
   }
 }
 
