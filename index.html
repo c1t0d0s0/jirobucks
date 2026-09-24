@@ -410,18 +410,26 @@
               <h3 class="spell-main-text" id="spell-main-text">「ニンニクマシヤサイアブラカラメ」</h3>
             </div>
 
-            <!-- Calorie & Mode-Specific Index Panel -->
+            <!-- Calorie & Mode-Specific Index Panel (1 row each) -->
             <div class="spell-metrics-panel" id="spell-metrics-panel">
               <div class="metric-chip calorie-chip" title="推定エネルギー">
-                <span class="metric-icon">🔥</span>
-                <span class="metric-title" data-i18n="metricCalorieLabel">推定:</span>
-                <strong class="metric-val" id="metric-calorie-val">約 1,550 kcal</strong>
+                <div class="metric-label-group">
+                  <span class="metric-icon">🔥</span>
+                  <span class="metric-title" data-i18n="metricCalorieLabel">推定カロリー:</span>
+                </div>
+                <div class="metric-value-group">
+                  <strong class="metric-val" id="metric-calorie-val">約 1,550 kcal</strong>
+                </div>
               </div>
               <div class="metric-chip index-chip" id="metric-index-chip" title="モード固有の指数">
-                <span class="metric-icon" id="metric-index-icon">😈</span>
-                <span class="metric-title" id="metric-index-title">ギルティ度:</span>
-                <strong class="metric-val" id="metric-index-val">★★★☆☆</strong>
-                <span class="metric-desc" id="metric-index-desc">(本格二郎)</span>
+                <div class="metric-label-group">
+                  <span class="metric-icon" id="metric-index-icon">😈</span>
+                  <span class="metric-title" id="metric-index-title">ギルティ度:</span>
+                </div>
+                <div class="metric-value-group">
+                  <strong class="metric-val" id="metric-index-val">★★★☆☆</strong>
+                  <span class="metric-desc" id="metric-index-desc">(本格二郎)</span>
+                </div>
               </div>
             </div>
 
