@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>JIROBUCKS | 二郎・スタバ 呪文コールジェネレーター</title>
+  <meta name="description" content="ラーメン二郎のコールとスターバックスのカスタム呪文をサクッと直感的に作成！店員に見せるモード、音声読み上げ、英語対応。">
+  <meta name="theme-color" content="#FFEE00">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=M+PLUS+Rounded+1c:wght@500;700;800;900&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+  
+  <!-- Config (Optional GTM_ID) -->
+  <script src="config.js"></script>
+</head>
+<body data-mode="jiro" data-lang="ja">
+
+  <!-- Header -->
+  <header class="app-header">
+    <div class="header-inner">
+      <div class="brand">
+        <div class="logo-icon" aria-hidden="true">
+          <span class="icon-jiro">🍜</span>
+          <span class="icon-x">✕</span>
+          <span class="icon-bucks">☕</span>
+        </div>
+        <div class="logo-text">
+          <h1 class="app-title">JIROBUCKS</h1>
+          <p class="app-subtitle" data-i18n="appSubtitle">二郎 & スタバ 呪文コールジェネレーター</p>
+        </div>
+      </div>
+
+      <div class="header-controls">
+        <!-- Mode Switcher -->
+        <nav class="mode-tabs" role="tablist" aria-label="Mode Selector">
+          <button id="tab-jiro" class="mode-tab active" role="tab" aria-selected="true" data-mode="jiro">
+            <span class="tab-emoji">🍜</span>
+            <span class="tab-label" data-i18n="modeJiro">ラーメン二郎</span>
+          </button>
+          <button id="tab-starbucks" class="mode-tab" role="tab" aria-selected="false" data-mode="starbucks">
+            <span class="tab-emoji">☕</span>
+            <span class="tab-label" data-i18n="modeStarbucks">スターバックス</span>
+          </button>
+        </nav>
+
+        <!-- Language Switcher -->
+        <div class="lang-switch-wrapper">
+          <button id="lang-toggle-btn" class="lang-toggle-btn" aria-label="Switch Language" title="日本語 / English">
+            <span class="lang-flag" aria-hidden="true">🌐</span>
+            <span id="lang-current-label">日本語</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="main-container">
+
+    <!-- Hero / Mode Banner -->
+    <section class="mode-hero">
+      <div class="hero-content">
+        <span class="hero-badge" id="hero-badge" data-i18n="jiroBadge">ニンニク入れますか？</span>
+        <h2 class="hero-heading" id="hero-heading" data-i18n="jiroHeading">二郎コールの緊張から解放</h2>
+        <p class="hero-desc" id="hero-desc" data-i18n="jiroDesc">好みをタップするだけで瞬時に完璧なコールを生成。店員に見せるモードで初心者も安心！</p>
+      </div>
+      <div class="hero-quick-actions">
+        <button id="btn-random" class="action-btn-secondary" title="おまかせ呪文を生成">
+          <span class="btn-icon">🎲</span>
+          <span data-i18n="btnRandom">おまかせ生成</span>
+        </button>
+        <button id="btn-reset" class="action-btn-secondary" title="デフォルトに戻す">
+          <span class="btn-icon">🔄</span>
+          <span data-i18n="btnReset">リセット</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Presets Bar -->
+    <section class="presets-section">
+      <div class="section-label">
+        <span class="label-icon">⚡</span>
+        <span data-i18n="presetsTitle">クイック定番プリセット</span>
+      </div>
+      <div class="presets-scroll" id="presets-list">
+        <!-- Rendered by JS based on current mode -->
+      </div>
+    </section>
+
+    <!-- App Layout Grid: Left = Builder, Right = Live Spell Card -->
+    <div class="builder-layout">
+
+      <!-- Left Column: Customization Options -->
+      <section class="options-column" id="options-container">
+        
+        <!-- JIRO BUILDER CONTROLS -->
+        <div id="jiro-controls" class="mode-controls active">
+          
+          <!-- Timing 1: Ticket handoff -->
+          <div class="control-group">
+            <div class="group-header">
+              <span class="timing-badge" data-i18n="jiroTimingTicket">① 食券提出時</span>
+              <h3 data-i18n="jiroTicketTitle">麺の量 &amp; 硬さ</h3>
+              <span class="timing-hint" data-i18n="jiroTicketHint">※着席時に食券を置く際、店員さんに伝える</span>
+            </div>
+            
+            <div class="field-item">
+              <label class="field-label" data-i18n="labelNoodleAmount">麺の量</label>
+              <div class="chip-group" data-param="noodleAmount">
+                <button type="button" class="chip active" data-val="normal" data-i18n="optNoodleNormal">普通 (約300g~)</button>
+                <button type="button" class="chip" data-val="less" data-i18n="optNoodleLess">少なめ</button>
+                <button type="button" class="chip" data-val="half" data-i18n="optNoodleHalf">半分</button>
+                <button type="button" class="chip" data-val="third" data-i18n="optNoodleThird">1/3</button>
+              </div>
+            </div>
+
+            <div class="field-item">
+              <label class="field-label" data-i18n="labelNoodleFirmness">麺の硬さ</label>
+              <div class="chip-group" data-param="noodleFirmness">
+                <button type="button" class="chip active" data-val="normal" data-i18n="optFirmNormal">普通</button>
+                <button type="button" class="chip" data-val="katame" data-i18n="optFirmKatame">カタメ (硬め)</button>
+                <button type="button" class="chip" data-val="barikata" data-i18n="optFirmBarikata">バリカタ</button>
+                <button type="button" class="chip" data-val="yawame" data-i18n="optFirmYawame">ヤワメ (柔らかめ)</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Timing 2: Free Topping Call -->
+          <div class="control-group highlight-group">
+            <div class="group-header">
+              <span class="timing-badge alert-badge" data-i18n="jiroTimingCall">② トッピングコール</span>
+              <h3 data-i18n="jiroCallTitle">「ニンニク入れますか？」へのコール</h3>
+              <span class="timing-hint" data-i18n="jiroCallHint">※丼が完成する直前に店員さんから聞かれます！</span>
+            </div>
+
+            <!-- Garlic -->
+            <div class="field-item">
+              <div class="field-header">
+                <label class="field-label">
+                  <span class="topping-icon">🧄</span>
+                  <span data-i18n="labelGarlic">ニンニク (Garlic)</span>
+                </label>
+                <span class="field-desc" data-i18n="descGarlic">刻み生ニンニクの有無と量</span>
+              </div>
+              <div class="chip-group" data-param="garlic">
+                <button type="button" class="chip" data-val="none" data-i18n="optGarlicNone">抜き (なし)</button>
+                <button type="button" class="chip" data-val="less" data-i18n="optGarlicLess">少なめ</button>
+                <button type="button" class="chip active" data-val="normal" data-i18n="optGarlicNormal">ニンニク (標準)</button>
+                <button type="button" class="chip" data-val="mashi" data-i18n="optGarlicMashi">マシ</button>
+                <button type="button" class="chip danger-chip" data-val="mashimashi" data-i18n="optGarlicMashimashi">マシマシ</button>
+              </div>
+            </div>
+
+            <!-- Yasai (Vegetables) -->
+            <div class="field-item">
+              <div class="field-header">
+                <label class="field-label">
+                  <span class="topping-icon">🥬</span>
+                  <span data-i18n="labelYasai">ヤサイ (Vegetables)</span>
+                </label>
+                <span class="field-desc" data-i18n="descYasai">もやし＆キャベツの山盛り加減</span>
+              </div>
+              <div class="chip-group" data-param="yasai">
+                <button type="button" class="chip" data-val="none" data-i18n="optYasaiNone">抜き</button>
+                <button type="button" class="chip" data-val="less" data-i18n="optYasaiLess">少なめ</button>
+                <button type="button" class="chip active" data-val="normal" data-i18n="optYasaiNormal">そのまま (標準)</button>
+                <button type="button" class="chip" data-val="mashi" data-i18n="optYasaiMashi">マシ</button>
+                <button type="button" class="chip danger-chip" data-val="mashimashi" data-i18n="optYasaiMashimashi">マシマシ</button>
+              </div>
+            </div>
+
+            <!-- Abura (Pork Fat) -->
+            <div class="field-item">
+              <div class="field-header">
+                <label class="field-label">
+                  <span class="topping-icon">🥩</span>
+                  <span data-i18n="labelAbura">アブラ (Pork Fat)</span>
+                </label>
+                <span class="field-desc" data-i18n="descAbura">背脂の量・甘みとコクが増加</span>
+              </div>
+              <div class="chip-group" data-param="abura">
+                <button type="button" class="chip" data-val="none" data-i18n="optAburaNone">抜き</button>
+                <button type="button" class="chip" data-val="less" data-i18n="optAburaLess">少なめ</button>
+                <button type="button" class="chip active" data-val="normal" data-i18n="optAburaNormal">そのまま (標準)</button>
+                <button type="button" class="chip" data-val="mashi" data-i18n="optAburaMashi">マシ</button>
+                <button type="button" class="chip danger-chip" data-val="mashimashi" data-i18n="optAburaMashimashi">マシマシ</button>
+              </div>
+            </div>
+
+            <!-- Karame (Soy Tare) -->
+            <div class="field-item">
+              <div class="field-header">
+                <label class="field-label">
+                  <span class="topping-icon">🧂</span>
+                  <span data-i18n="labelKarame">カラメ (Soy Sauce Tare)</span>
+                </label>
+                <span class="field-desc" data-i18n="descKarame">醤油ダレの濃さ・味の濃さ</span>
+              </div>
+              <div class="chip-group" data-param="karame">
+                <button type="button" class="chip active" data-val="normal" data-i18n="optKarameNormal">そのまま (標準)</button>
+                <button type="button" class="chip" data-val="karame" data-i18n="optKarameMashi">カラメ (濃いめ)</button>
+                <button type="button" class="chip danger-chip" data-val="karakara" data-i18n="optKarameKarakara">カラカラ (超濃いめ)</button>
+              </div>
+            </div>
+
+            <!-- Abbreviation toggle -->
+            <div class="field-toggle-row">
+              <label class="toggle-switch">
+                <input type="checkbox" id="jiro-abbreviate-toggle" checked>
+                <span class="toggle-slider"></span>
+              </label>
+              <div class="toggle-text">
+                <strong data-i18n="labelJiroAbbreviate">まとめて短縮コール（全マシ・全マシマシ等）を有効にする</strong>
+                <p data-i18n="descJiroAbbreviate">オフにすると「ニンニクマシヤサイマシアブラマシカラメ」のようにすべて言葉にして唱えます</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- STARBUCKS BUILDER CONTROLS -->
+        <div id="starbucks-controls" class="mode-controls">
+          
+          <!-- Category 1: Base Drink Selection -->
+          <div class="control-group">
+            <div class="group-header">
+              <span class="timing-badge bucks-badge" data-i18n="bucksStep1">Step 1</span>
+              <h3 data-i18n="bucksTitleDrink">ベースドリンクを選択</h3>
+            </div>
+
+            <div class="field-item">
+              <label class="field-label" data-i18n="labelDrinkCategory">カテゴリー</label>
+              <div class="chip-group" id="sb-category-chips">
+                <button type="button" class="chip active" data-cat="espresso" data-i18n="catEspresso">エスプレッソ</button>
+                <button type="button" class="chip" data-cat="frappuccino" data-i18n="catFrappuccino">フラペチーノ</button>
+                <button type="button" class="chip" data-cat="tea" data-i18n="catTea">ティー・その他</button>
+              </div>
+            </div>
+
+            <div class="field-item">
+              <label class="field-label" data-i18n="labelDrinkName">ドリンク名</label>
+              <div class="drink-select-grid" id="sb-drink-grid">
+                <!-- Injected via JS based on selected category -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Category 2: Temp & Size -->
+          <div class="control-group">
+            <div class="group-header">
+              <span class="timing-badge bucks-badge" data-i18n="bucksStep2">Step 2</span>
+              <h3 data-i18n="bucksTitleSize">サイズ &amp; 温度</h3>
+            </div>
+
+            <div class="field-item" id="sb-temp-field">
+              <label class="field-label" data-i18n="labelTemp">温度</label>
+              <div class="chip-group" data-sb-param="temp">
+                <button type="button" class="chip active" data-val="hot" data-i18n="optTempHot">🔥 ホット (HOT)</button>
+                <button type="button" class="chip" data-val="iced" data-i18n="optTempIced">🧊 アイス (ICED)</button>
+              </div>
+            </div>
+
+            <div class="field-item">
+              <label class="field-label" data-i18n="labelSize">サイズ</label>
+              <div class="chip-group" data-sb-param="size">
+                <button type="button" class="chip" data-val="short" data-i18n="optSizeShort">Short (ショート 240ml)</button>
+                <button type="button" class="chip active" data-val="tall" data-i18n="optSizeTall">Tall (トール 350ml)</button>
+                <button type="button" class="chip" data-val="grande" data-i18n="optSizeGrande">Grande (グランデ 470ml)</button>
+                <button type="button" class="chip" data-val="venti" data-i18n="optSizeVenti">Venti® (ベンティ 590ml)</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Category 3: Milk & Espresso Custom -->
+          <div class="control-group">
+            <div class="group-header">
+              <span class="timing-badge bucks-badge" data-i18n="bucksStep3">Step 3</span>
+              <h3 data-i18n="bucksTitleCustom">ミルク &amp; エスプレッソ・カスタム</h3>
+            </div>
+
+            <div class="field-item" id="sb-milk-field">
+              <label class="field-label" data-i18n="labelMilk">ミルクの種類</label>
+              <div class="chip-group" data-sb-param="milk">
+                <button type="button" class="chip active" data-val="regular" data-i18n="optMilkRegular">通常ミルク</button>
+                <button type="button" class="chip" data-val="lowfat" data-i18n="optMilkLowFat">低脂肪タイプ (無料)</button>
+                <button type="button" class="chip" data-val="nonfat" data-i18n="optMilkNonFat">無脂肪乳 (ノンファット/無料)</button>
+                <button type="button" class="chip" data-val="soy" data-i18n="optMilkSoy">ソイミルク (調整豆乳/+55円)</button>
+                <button type="button" class="chip" data-val="almond" data-i18n="optMilkAlmond">アーモンドミルク (+55円)</button>
+                <button type="button" class="chip" data-val="oat" data-i18n="optMilkOat">オーツミルク (+55円)</button>
+                <button type="button" class="chip" data-val="breve" data-i18n="optMilkBreve">ブレベ (生クリーム5:牛乳5/+55円)</button>
+              </div>
+            </div>
+
+            <!-- Espresso shots -->
+            <div class="field-item" id="sb-shots-field">
+              <label class="field-label" data-i18n="labelShots">エスプレッソ ショット</label>
+              <div class="chip-group" data-sb-param="shots">
+                <button type="button" class="chip active" data-val="standard" data-i18n="optShotsStandard">標準量</button>
+                <button type="button" class="chip" data-val="none" data-i18n="optShotsNone">ショット抜き (なし)</button>
+                <button type="button" class="chip" data-val="single" data-i18n="optShotsSingle">+1 ショット追加 (ソロ/+55円)</button>
+                <button type="button" class="chip" data-val="double" data-i18n="optShotsDouble">+2 ショット追加 (ディオ/+110円)</button>
+                <button type="button" class="chip" data-val="triple" data-i18n="optShotsTriple">トリプル (3ショット)</button>
+                <button type="button" class="chip" data-val="quad" data-i18n="optShotsQuad">クアッド (4ショット)</button>
+              </div>
+            </div>
+
+            <!-- Decaf / Roast -->
+            <div class="field-item">
+              <label class="field-label" data-i18n="labelBeans">豆・カフェイン変更</label>
+              <div class="chip-group" data-sb-param="beans">
+                <button type="button" class="chip active" data-val="standard" data-i18n="optBeansStandard">標準エスプレッソ</button>
+                <button type="button" class="chip" data-val="decaf" data-i18n="optBeansDecaf">ディカフェ変更 (カフェインレス/+55円)</button>
+                <button type="button" class="chip" data-val="blonde" data-i18n="optBeansBlonde">ブロンド エスプレッソ変更 (軽やか/無料)</button>
+                <button type="button" class="chip" data-val="ristretto" data-i18n="optBeansRistretto">リストレット (短時間抽出・甘み/無料)</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Category 4: Syrups, Whip & Toppings -->
+          <div class="control-group">
+            <div class="group-header">
+              <span class="timing-badge bucks-badge" data-i18n="bucksStep4">Step 4</span>
+              <h3 data-i18n="bucksTitleTopping">シロップ・ホイップ・トッピング</h3>
+            </div>
+
+            <!-- Syrups -->
+            <div class="field-item">
+              <label class="field-label" data-i18n="labelSyrup">シロップ</label>
+              <div class="chip-group" data-sb-param="syrup">
+                <button type="button" class="chip active" data-val="default" data-i18n="optSyrupDefault">標準のまま</button>
+                <button type="button" class="chip" data-val="vanilla" data-i18n="optSyrupVanilla">バニラシロップ追加 (+55円)</button>
+                <button type="button" class="chip" data-val="caramel" data-i18n="optSyrupCaramel">キャラメルシロップ追加 (+55円)</button>
+                <button type="button" class="chip" data-val="whitemocha" data-i18n="optSyrupWhiteMocha">ホワイトモカシロップ追加 (+55円)</button>
+                <button type="button" class="chip" data-val="extra" data-i18n="optSyrupExtra">シロップ多め (エクストラシロップ/無料)</button>
+                <button type="button" class="chip" data-val="light" data-i18n="optSyrupLight">シロップ少なめ (ライトシロップ/無料)</button>
+                <button type="button" class="chip" data-val="none" data-i18n="optSyrupNone">ノンシロップ (シロップ抜き/無料)</button>
+              </div>
+            </div>
+
+            <!-- Whipped Cream -->
+            <div class="field-item">
+              <label class="field-label" data-i18n="labelWhip">ホイップクリーム</label>
+              <div class="chip-group" data-sb-param="whip">
+                <button type="button" class="chip active" data-val="default" data-i18n="optWhipDefault">標準 (元々入っていればあり)</button>
+                <button type="button" class="chip" data-val="extra" data-i18n="optWhipExtra">多め (エクストラホイップ/無料)</button>
+                <button type="button" class="chip" data-val="light" data-i18n="optWhipLight">少なめ (ライトホイップ/無料)</button>
+                <button type="button" class="chip" data-val="none" data-i18n="optWhipNone">ホイップなし (ノンホイップ/無料)</button>
+                <button type="button" class="chip" data-val="add" data-i18n="optWhipAdd">ホイップ追加 (+55円)</button>
+              </div>
+            </div>
+
+            <!-- Sauce / Drizzle -->
+            <div class="field-item">
+              <label class="field-label" data-i18n="labelDrizzle">ソース (無料トッピング)</label>
+              <div class="chip-group" data-sb-param="drizzle">
+                <button type="button" class="chip active" data-val="none" data-i18n="optDrizzleNone">なし</button>
+                <button type="button" class="chip" data-val="caramel" data-i18n="optDrizzleCaramel">キャラメルソース追加 (無料)</button>
+                <button type="button" class="chip" data-val="chocolate" data-i18n="optDrizzleChocolate">チョコソース追加 (無料)</button>
+                <button type="button" class="chip" data-val="both" data-i18n="optDrizzleBoth">キャラメル &amp; チョコ両方追加 (Wソース/無料)</button>
+                <button type="button" class="chip" data-val="honey" data-i18n="optDrizzleHoney">はちみつ追加 (無料)</button>
+              </div>
+            </div>
+
+            <!-- Ice / Extra Milk -->
+            <div class="field-item" id="sb-ice-field">
+              <label class="field-label" data-i18n="labelIceMilk">氷 &amp; ミルクの配分 (アイス時)</label>
+              <div class="chip-group" data-sb-param="icemilk">
+                <button type="button" class="chip active" data-val="default" data-i18n="optIceMilkDefault">標準</button>
+                <button type="button" class="chip" data-val="lightice-extramilk" data-i18n="optIceMilkLightExtra">氷少なめ &amp; ミルク多め (ライトアイス・エクストラミルク)</button>
+                <button type="button" class="chip" data-val="noice" data-i18n="optIceMilkNoIce">氷なし (ノンアイス)</button>
+                <button type="button" class="chip" data-val="extraice" data-i18n="optIceMilkExtraIce">氷多め (エクストラアイス)</button>
+              </div>
+            </div>
+
+            <!-- Frappuccino Toppings -->
+            <div class="field-item" id="sb-frap-field" style="display: none;">
+              <label class="field-label" data-i18n="labelFrapCustom">フラペチーノ専用カスタム</label>
+              <div class="chip-group" data-sb-param="frapcustom">
+                <button type="button" class="chip active" data-val="none" data-i18n="optFrapNone">なし</button>
+                <button type="button" class="chip" data-val="extrapowder" data-i18n="optFrapExtraPowder">パウダー多め (エクストラパウダー/無料)</button>
+                <button type="button" class="chip" data-val="chocolatechip" data-i18n="optFrapChocChip">チョコチップ追加 (+55円)</button>
+                <button type="button" class="chip" data-val="allcustom" data-i18n="optFrapAll">パウダー多め &amp; チップ追加</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </section>
+
+      <!-- Right Column: Live Spell Display Card (Sticky / High-Visibility) -->
+      <aside class="spell-column">
+        <div class="spell-card-wrapper" id="sticky-spell-card">
+          <div class="spell-card">
+            
+            <div class="spell-card-header">
+              <span class="spell-tag" id="spell-type-tag" data-i18n="tagJiroCall">二郎コール呪文</span>
+              <span class="live-dot" title="リアルタイム更新中"></span>
+            </div>
+
+            <div class="spell-display-area">
+              <p class="spell-phonetic" id="spell-phonetic">ニンニクマシヤサイアブラカラメ</p>
+              <h3 class="spell-main-text" id="spell-main-text">「ニンニクマシヤサイアブラカラメ」</h3>
+            </div>
+
+            <!-- Breakdown list -->
+            <div class="spell-breakdown" id="spell-breakdown">
+              <!-- Rendered items breakdown -->
+            </div>
+
+            <!-- Timing / Etiquette Tip -->
+            <div class="spell-tip-box" id="spell-tip-box">
+              <span class="tip-icon">💡</span>
+              <div class="tip-content">
+                <strong id="tip-title" data-i18n="tipJiroTitle">唱えるタイミング</strong>
+                <p id="tip-text" data-i18n="tipJiroText">丼が提供される直前に店員さんから「ニンニク入れますか？」と聞かれたら、そのまま唱えましょう！</p>
+              </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="spell-actions">
+              <!-- Show to Staff (Big Button) -->
+              <button id="btn-show-staff" class="action-btn-primary" title="画面を店員さんに見せるための全画面巨大文字モード">
+                <span class="btn-icon">📱</span>
+                <span data-i18n="btnShowStaff">店員に見せる (巨大文字)</span>
+              </button>
+
+              <div class="action-btn-row">
+                <!-- Copy -->
+                <button id="btn-copy" class="action-btn-secondary" title="クリップボードにコピー">
+                  <span class="btn-icon">📋</span>
+                  <span id="btn-copy-label" data-i18n="btnCopy">コピー</span>
+                </button>
+                <!-- Voice Read Aloud -->
+                <button id="btn-speak" class="action-btn-secondary" title="音声で読み上げて練習">
+                  <span class="btn-icon">🔊</span>
+                  <span data-i18n="btnSpeak">読み上げ</span>
+                </button>
+                <!-- Share -->
+                <button id="btn-share" class="action-btn-secondary" title="X(Twitter)にシェア">
+                  <span class="btn-icon">🐦</span>
+                  <span data-i18n="btnShare">シェア</span>
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </aside>
+
+    </div>
+
+    <!-- Etiquette & Beginner Guide Section -->
+    <section class="guide-section">
+      <details class="guide-accordion" id="guide-accordion">
+        <summary class="guide-summary">
+          <span class="summary-left">
+            <span class="guide-icon">📖</span>
+            <strong id="guide-summary-title" data-i18n="guideTitleJiro">【初心者必読】ラーメン二郎の入店・注文ルールとマナー</strong>
+          </span>
+          <span class="accordion-arrow">▼</span>
+        </summary>
+        <div class="guide-content" id="guide-content-body">
+          <!-- Dynamic Guide content rendered by JS for Jiro / Starbucks -->
+        </div>
+      </details>
+    </section>
+
+  </main>
+
+  <!-- Fullscreen "Show to Staff" Modal -->
+  <div id="staff-modal" class="staff-modal" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="modal-backdrop" id="modal-backdrop"></div>
+    <div class="modal-card">
+      <div class="modal-header">
+        <span class="modal-badge" id="modal-badge" data-i18n="modalBadge">店員さんにお見せください</span>
+        <button id="btn-close-modal" class="modal-close-btn" aria-label="閉じる">✕</button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-sub-label" id="modal-sub-label" data-i18n="modalSubJiro">【コール】</p>
+        <div class="modal-spell-text" id="modal-spell-text">ニンニクマシヤサイアブラカラメ</div>
+        <div class="modal-details" id="modal-details">
+          <!-- Detailed item list for staff -->
+        </div>
+      </div>
+      <div class="modal-footer">
+        <p class="modal-note" id="modal-note" data-i18n="modalNote">※画面の明るさを上げてそのままスタッフにお見せください</p>
+        <button id="btn-modal-dismiss" class="action-btn-primary" data-i18n="modalBtnDismiss">閉じる</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast" role="status" aria-live="polite">
+    <span class="toast-icon">✅</span>
+    <span id="toast-message">コピーしました！</span>
+  </div>
+
+  <!-- Footer -->
+  <footer class="app-footer">
+    <div class="footer-inner">
+      <div class="footer-links">
+        <span class="footer-tag">Jirobucks</span>
+        <span class="footer-sep">·</span>
+        <span data-i18n="footerTagline">二郎とスタバをもっと身近に</span>
+      </div>
+      <p class="footer-disclaimer" data-i18n="footerDisclaimer">
+        当サイトはファンメイドの非公式コール・注文ジェネレーターです。各店舗の公式サービスとは一切関係ありません。
+      </p>
+      <p class="footer-copyright">© 2026 c1t0d0s0</p>
+    </div>
+  </footer>
+
+  <!-- App Script -->
+  <script src="script.js"></script>
+</body>
+</html>

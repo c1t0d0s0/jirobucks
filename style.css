@@ -1,0 +1,1236 @@
+/* ==========================================================================
+   JIROBUCKS CSS - High Visibility, Responsive Dual Theme
+   © 2026 c1t0d0s0
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. CSS Custom Properties & Themes
+   -------------------------------------------------------------------------- */
+:root {
+  /* Common System Tokens */
+  --font-family-base: 'Inter', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-family-heading: 'M PLUS Rounded 1c', 'Noto Sans JP', sans-serif;
+  
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-full: 9999px;
+
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 10px 28px rgba(0, 0, 0, 0.12);
+  --shadow-lift: 0 6px 16px rgba(0, 0, 0, 0.14);
+
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.25s ease;
+}
+
+/* JIRO MODE THEME (Bright Yellow, Deep Charcoal, Vivid Red Accent) */
+body[data-mode="jiro"] {
+  --theme-primary: #FFE600;
+  --theme-primary-hover: #F2D800;
+  --theme-primary-contrast: #111111;
+  
+  --theme-accent: #E60012;
+  --theme-accent-hover: #CC0010;
+  --theme-accent-contrast: #FFFFFF;
+  
+  --theme-bg: #FBF9F1;
+  --theme-surface: #FFFFFF;
+  --theme-surface-subtle: #FFFBE6;
+  --theme-surface-border: #E8E2CD;
+  
+  --theme-text-main: #1A1A1A;
+  --theme-text-muted: #555555;
+  --theme-border-active: #111111;
+  
+  --header-bg: #141414;
+  --header-text: #FFFFFF;
+  --tab-active-bg: #FFE600;
+  --tab-active-color: #111111;
+  
+  --spell-card-bg: #181818;
+  --spell-card-text: #FFFFFF;
+  --spell-card-highlight: #FFE600;
+  --spell-card-sub: #E2E2E2;
+  --spell-badge-bg: #E60012;
+  --spell-badge-color: #FFFFFF;
+}
+
+/* STARBUCKS MODE THEME (Starbucks Emerald Green, Warm Cream, Rich Roast) */
+body[data-mode="starbucks"] {
+  --theme-primary: #00754A;
+  --theme-primary-hover: #00623E;
+  --theme-primary-contrast: #FFFFFF;
+  
+  --theme-accent: #C2825B;
+  --theme-accent-hover: #AB6E49;
+  --theme-accent-contrast: #FFFFFF;
+  
+  --theme-bg: #F4F2EC;
+  --theme-surface: #FFFFFF;
+  --theme-surface-subtle: #E9F4EE;
+  --theme-surface-border: #D8D2C6;
+  
+  --theme-text-main: #1E3932;
+  --theme-text-muted: #52635B;
+  --theme-border-active: #00754A;
+  
+  --header-bg: #1E3932;
+  --header-text: #FFFFFF;
+  --tab-active-bg: #00754A;
+  --tab-active-color: #FFFFFF;
+  
+  --spell-card-bg: #1E3932;
+  --spell-card-text: #FFFFFF;
+  --spell-card-highlight: #D4E9E2;
+  --spell-card-sub: #E4EAE6;
+  --spell-badge-bg: #C2825B;
+  --spell-badge-color: #FFFFFF;
+}
+
+/* --------------------------------------------------------------------------
+   2. Reset & Global Styles
+   -------------------------------------------------------------------------- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-family-base);
+  background-color: var(--theme-bg);
+  color: var(--theme-text-main);
+  line-height: 1.55;
+  transition: background-color var(--transition-normal), color var(--transition-normal);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+  outline: none;
+}
+
+button:focus-visible {
+  outline: 3px solid #2563EB;
+  outline-offset: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   3. Header & Navigation
+   -------------------------------------------------------------------------- */
+.app-header {
+  background-color: var(--header-bg);
+  color: var(--header-text);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  transition: background-color var(--transition-normal);
+}
+
+.header-inner {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0.75rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.logo-icon {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 1.5rem;
+  background: rgba(255, 255, 255, 0.12);
+  padding: 0.25rem 0.6rem;
+  border-radius: var(--radius-md);
+}
+
+.icon-x {
+  font-size: 0.85rem;
+  opacity: 0.6;
+  font-weight: 700;
+}
+
+.logo-text .app-title {
+  font-family: var(--font-family-heading);
+  font-size: 1.45rem;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  line-height: 1.1;
+  color: #FFFFFF;
+}
+
+.logo-text .app-subtitle {
+  font-size: 0.75rem;
+  opacity: 0.85;
+  letter-spacing: 0.02em;
+}
+
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.mode-tabs {
+  display: flex;
+  background: rgba(255, 255, 255, 0.15);
+  padding: 0.25rem;
+  border-radius: var(--radius-full);
+}
+
+.mode-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 1rem;
+  border-radius: var(--radius-full);
+  color: #FFFFFF;
+  font-size: 0.9rem;
+  font-weight: 700;
+  transition: all var(--transition-fast);
+}
+
+.mode-tab.active {
+  background-color: var(--tab-active-bg);
+  color: var(--tab-active-color);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.lang-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: rgba(255, 255, 255, 0.15);
+  color: #FFFFFF;
+  padding: 0.45rem 0.85rem;
+  border-radius: var(--radius-full);
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: background var(--transition-fast);
+}
+
+.lang-toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* --------------------------------------------------------------------------
+   4. Main Container & Hero Banner
+   -------------------------------------------------------------------------- */
+.main-container {
+  max-width: 1240px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 1.5rem 1.25rem 3.5rem;
+  flex: 1;
+}
+
+.mode-hero {
+  background: var(--theme-surface);
+  border: 2px solid var(--theme-surface-border);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  transition: border-color var(--transition-normal);
+}
+
+.hero-badge {
+  display: inline-block;
+  background: var(--theme-primary);
+  color: var(--theme-primary-contrast);
+  font-weight: 800;
+  font-size: 0.8rem;
+  padding: 0.2rem 0.65rem;
+  border-radius: var(--radius-full);
+  margin-bottom: 0.4rem;
+  letter-spacing: 0.03em;
+}
+
+.hero-heading {
+  font-family: var(--font-family-heading);
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: var(--theme-text-main);
+  line-height: 1.25;
+  margin-bottom: 0.25rem;
+}
+
+.hero-desc {
+  font-size: 0.92rem;
+  color: var(--theme-text-muted);
+}
+
+.hero-quick-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.action-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: var(--theme-surface);
+  color: var(--theme-text-main);
+  border: 1.5px solid var(--theme-surface-border);
+  padding: 0.55rem 0.95rem;
+  border-radius: var(--radius-md);
+  font-size: 0.88rem;
+  font-weight: 700;
+  transition: all var(--transition-fast);
+  box-shadow: var(--shadow-sm);
+}
+
+.action-btn-secondary:hover {
+  background: var(--theme-surface-subtle);
+  border-color: var(--theme-border-active);
+  transform: translateY(-1px);
+}
+
+/* --------------------------------------------------------------------------
+   5. Presets Bar
+   -------------------------------------------------------------------------- */
+.presets-section {
+  margin-bottom: 1.5rem;
+}
+
+.section-label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: var(--theme-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.6rem;
+}
+
+.presets-scroll {
+  display: flex;
+  gap: 0.6rem;
+  overflow-x: auto;
+  padding: 0.2rem 0.2rem 0.6rem;
+  scrollbar-width: thin;
+}
+
+.presets-scroll::-webkit-scrollbar {
+  height: 6px;
+}
+
+.presets-scroll::-webkit-scrollbar-thumb {
+  background: var(--theme-surface-border);
+  border-radius: var(--radius-full);
+}
+
+.preset-chip {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: var(--theme-surface);
+  border: 1.5px solid var(--theme-surface-border);
+  padding: 0.6rem 1rem;
+  border-radius: var(--radius-full);
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--theme-text-main);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-fast);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.preset-chip:hover {
+  background: var(--theme-surface-subtle);
+  border-color: var(--theme-border-active);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.preset-chip.active {
+  background: var(--theme-primary);
+  color: var(--theme-primary-contrast);
+  border-color: var(--theme-primary-contrast);
+  font-weight: 800;
+}
+
+/* --------------------------------------------------------------------------
+   6. Two-Column Builder Layout
+   -------------------------------------------------------------------------- */
+.builder-layout {
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  gap: 1.75rem;
+  align-items: start;
+}
+
+@media (max-width: 980px) {
+  .builder-layout {
+    grid-template-columns: 1fr;
+  }
+  
+  /* On mobile/tablet, move spell card to the top so user immediately sees what they create */
+  .spell-column {
+    order: -1;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   7. Option Groups & Chips
+   -------------------------------------------------------------------------- */
+.mode-controls {
+  display: none;
+}
+
+.mode-controls.active {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.control-group {
+  background: var(--theme-surface);
+  border: 2px solid var(--theme-surface-border);
+  border-radius: var(--radius-lg);
+  padding: 1.35rem 1.4rem;
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-fast);
+}
+
+.control-group.highlight-group {
+  border-color: #E2C968;
+  background: #FFFDF5;
+}
+
+body[data-mode="starbucks"] .control-group.highlight-group {
+  border-color: #B2D8C6;
+  background: #F8FCFA;
+}
+
+.group-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.8rem;
+  margin-bottom: 1.1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1.5px solid var(--theme-surface-border);
+}
+
+.timing-badge {
+  display: inline-block;
+  background: var(--theme-text-main);
+  color: #FFFFFF;
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--radius-full);
+}
+
+.timing-badge.alert-badge {
+  background: var(--theme-accent);
+  color: #FFFFFF;
+}
+
+.timing-badge.bucks-badge {
+  background: var(--theme-primary);
+  color: var(--theme-primary-contrast);
+}
+
+.group-header h3 {
+  font-family: var(--font-family-heading);
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--theme-text-main);
+}
+
+.timing-hint {
+  font-size: 0.8rem;
+  color: var(--theme-text-muted);
+  margin-left: auto;
+}
+
+.field-item {
+  margin-bottom: 1.1rem;
+}
+
+.field-item:last-child {
+  margin-bottom: 0;
+}
+
+.field-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.45rem;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.field-label {
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: var(--theme-text-main);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 0.4rem;
+}
+
+.topping-icon {
+  font-size: 1.1rem;
+}
+
+.field-desc {
+  font-size: 0.78rem;
+  color: var(--theme-text-muted);
+}
+
+.chip-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.55rem 0.95rem;
+  background: var(--theme-surface);
+  border: 1.5px solid var(--theme-surface-border);
+  border-radius: var(--radius-md);
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--theme-text-main);
+  transition: all var(--transition-fast);
+  cursor: pointer;
+  min-height: 42px;
+}
+
+.chip:hover {
+  background: var(--theme-surface-subtle);
+  border-color: var(--theme-border-active);
+  transform: translateY(-1px);
+}
+
+.chip.active {
+  background: var(--theme-primary);
+  color: var(--theme-primary-contrast);
+  border-color: var(--theme-primary-contrast);
+  font-weight: 800;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.chip.danger-chip.active {
+  background: var(--theme-accent);
+  color: var(--theme-accent-contrast);
+  border-color: var(--theme-accent-contrast);
+}
+
+/* Drink selection grid for Starbucks */
+.drink-select-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 0.5rem;
+}
+
+.drink-chip {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0.65rem 0.85rem;
+  background: var(--theme-surface);
+  border: 1.5px solid var(--theme-surface-border);
+  border-radius: var(--radius-md);
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: var(--theme-text-main);
+  text-align: left;
+  transition: all var(--transition-fast);
+  min-height: 52px;
+  justify-content: center;
+}
+
+.drink-chip:hover {
+  background: var(--theme-surface-subtle);
+  border-color: var(--theme-border-active);
+  transform: translateY(-1px);
+}
+
+.drink-chip.active {
+  background: var(--theme-primary);
+  color: var(--theme-primary-contrast);
+  border-color: var(--theme-primary-contrast);
+  font-weight: 800;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.drink-chip .drink-primary {
+  font-size: 0.88rem;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.drink-chip .drink-secondary {
+  font-size: 0.72rem;
+  opacity: 0.8;
+  font-weight: 500;
+  margin-top: 0.15rem;
+}
+
+/* Toggle Switch */
+.field-toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.85rem 1rem;
+  background: rgba(0, 0, 0, 0.03);
+  border: 1.5px dashed var(--theme-surface-border);
+  border-radius: var(--radius-md);
+  margin-top: 1rem;
+}
+
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 48px;
+  height: 26px;
+  flex-shrink: 0;
+}
+
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #CCCCCC;
+  transition: var(--transition-fast);
+  border-radius: 34px;
+}
+
+.toggle-slider::before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: var(--transition-fast);
+  border-radius: 50%;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+
+input:checked + .toggle-slider {
+  background-color: var(--theme-primary);
+}
+
+input:checked + .toggle-slider::before {
+  transform: translateX(22px);
+  background-color: var(--theme-primary-contrast);
+}
+
+.toggle-text strong {
+  display: block;
+  font-size: 0.86rem;
+  color: var(--theme-text-main);
+}
+
+.toggle-text p {
+  font-size: 0.75rem;
+  color: var(--theme-text-muted);
+  line-height: 1.35;
+}
+
+/* --------------------------------------------------------------------------
+   8. Live Spell Card (Sticky / High Visibility)
+   -------------------------------------------------------------------------- */
+.spell-column {
+  position: sticky;
+  top: 4.8rem;
+  z-index: 10;
+}
+
+.spell-card {
+  background: var(--spell-card-bg);
+  color: var(--spell-card-text);
+  border-radius: var(--radius-lg);
+  padding: 1.4rem;
+  box-shadow: var(--shadow-lg);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.spell-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.spell-tag {
+  background: var(--spell-badge-bg);
+  color: var(--spell-badge-color);
+  font-size: 0.76rem;
+  font-weight: 800;
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-full);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.live-dot {
+  width: 10px;
+  height: 10px;
+  background-color: #22C55E;
+  border-radius: 50%;
+  display: inline-block;
+  box-shadow: 0 0 8px #22C55E;
+  animation: pulse-live 1.8s infinite;
+}
+
+@keyframes pulse-live {
+  0% { transform: scale(0.95); opacity: 0.8; }
+  50% { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(0.95); opacity: 0.8; }
+}
+
+.spell-display-area {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1.5px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-md);
+  padding: 1.1rem;
+}
+
+.spell-phonetic {
+  font-size: 0.82rem;
+  color: var(--spell-card-highlight);
+  font-weight: 700;
+  margin-bottom: 0.4rem;
+  letter-spacing: 0.04em;
+  min-height: 1.2rem;
+}
+
+.spell-main-text {
+  font-family: var(--font-family-heading);
+  font-size: 1.45rem;
+  font-weight: 900;
+  line-height: 1.35;
+  color: #FFFFFF;
+  word-break: break-word;
+}
+
+.spell-breakdown {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.breakdown-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--spell-card-sub);
+  font-size: 0.76rem;
+  font-weight: 600;
+  padding: 0.2rem 0.55rem;
+  border-radius: var(--radius-full);
+}
+
+.breakdown-badge.highlight {
+  background: var(--spell-card-highlight);
+  color: #111111;
+  font-weight: 800;
+}
+
+.spell-tip-box {
+  display: flex;
+  gap: 0.65rem;
+  background: rgba(255, 255, 255, 0.08);
+  padding: 0.75rem 0.9rem;
+  border-radius: var(--radius-md);
+  font-size: 0.82rem;
+  line-height: 1.4;
+}
+
+.tip-icon {
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.tip-content strong {
+  display: block;
+  color: var(--spell-card-highlight);
+  font-size: 0.84rem;
+  margin-bottom: 0.15rem;
+}
+
+.tip-content p {
+  color: var(--spell-card-sub);
+}
+
+/* Action Buttons */
+.spell-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.action-btn-primary {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  background: var(--theme-primary);
+  color: var(--theme-primary-contrast);
+  padding: 0.9rem 1.25rem;
+  border-radius: var(--radius-md);
+  font-size: 1.05rem;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  transition: all var(--transition-fast);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+}
+
+.action-btn-primary:hover {
+  filter: brightness(1.08);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+}
+
+.action-btn-row {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.action-btn-row .action-btn-secondary {
+  flex: 1;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.1);
+  color: #FFFFFF;
+  border-color: rgba(255, 255, 255, 0.2);
+  padding: 0.6rem 0.4rem;
+  font-size: 0.82rem;
+}
+
+.action-btn-row .action-btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.35);
+  color: #FFFFFF;
+}
+
+/* --------------------------------------------------------------------------
+   9. Etiquette & Beginner Guide Section
+   -------------------------------------------------------------------------- */
+.guide-section {
+  margin-top: 2.5rem;
+}
+
+.guide-accordion {
+  background: var(--theme-surface);
+  border: 2px solid var(--theme-surface-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+.guide-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.15rem 1.4rem;
+  cursor: pointer;
+  list-style: none;
+  font-size: 1rem;
+  transition: background var(--transition-fast);
+}
+
+.guide-summary::-webkit-details-marker {
+  display: none;
+}
+
+.guide-summary:hover {
+  background: var(--theme-surface-subtle);
+}
+
+.summary-left {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.guide-icon {
+  font-size: 1.25rem;
+}
+
+.accordion-arrow {
+  font-size: 0.85rem;
+  color: var(--theme-text-muted);
+  transition: transform var(--transition-fast);
+}
+
+details[open] .accordion-arrow {
+  transform: rotate(180deg);
+}
+
+.guide-content {
+  padding: 0 1.4rem 1.4rem;
+  border-top: 1px solid var(--theme-surface-border);
+  font-size: 0.92rem;
+  line-height: 1.7;
+}
+
+.guide-content h4 {
+  font-size: 1.05rem;
+  font-weight: 800;
+  margin: 1.25rem 0 0.4rem;
+  color: var(--theme-text-main);
+}
+
+.guide-content ul, .guide-content ol {
+  padding-left: 1.4rem;
+  margin-bottom: 0.8rem;
+}
+
+.guide-content li {
+  margin-bottom: 0.35rem;
+}
+
+.guide-callout {
+  background: var(--theme-surface-subtle);
+  border-left: 4px solid var(--theme-primary);
+  padding: 0.75rem 1rem;
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  margin: 1rem 0;
+  font-size: 0.88rem;
+}
+
+/* --------------------------------------------------------------------------
+   10. Fullscreen "Show to Staff" Modal
+   -------------------------------------------------------------------------- */
+.staff-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.staff-modal.open {
+  display: flex;
+}
+
+.modal-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(4px);
+}
+
+.modal-card {
+  position: relative;
+  background: #FFFFFF;
+  color: #111111;
+  width: 100%;
+  max-width: 620px;
+  max-height: 90vh;
+  border-radius: var(--radius-lg);
+  padding: 1.75rem;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  overflow-y: auto;
+  animation: modal-pop 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modal-pop {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modal-badge {
+  background: #111111;
+  color: #FFFFFF;
+  font-size: 0.82rem;
+  font-weight: 800;
+  padding: 0.3rem 0.8rem;
+  border-radius: var(--radius-full);
+}
+
+.modal-close-btn {
+  font-size: 1.4rem;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #F0F0F0;
+  border-radius: 50%;
+  color: #333333;
+  transition: background var(--transition-fast);
+}
+
+.modal-close-btn:hover {
+  background: #E0E0E0;
+}
+
+.modal-body {
+  text-align: center;
+  padding: 0.5rem 0;
+}
+
+.modal-sub-label {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #666666;
+  margin-bottom: 0.5rem;
+}
+
+.modal-spell-text {
+  font-family: var(--font-family-heading);
+  font-size: 2.1rem;
+  font-weight: 900;
+  line-height: 1.3;
+  color: #111111;
+  background: #FFFBE6;
+  border: 3px solid #111111;
+  border-radius: var(--radius-md);
+  padding: 1.25rem 1rem;
+  word-break: break-word;
+  box-shadow: 0 4px 0 #111111;
+  margin-bottom: 1rem;
+}
+
+body[data-mode="starbucks"] .modal-spell-text {
+  background: #EBF8F2;
+  border-color: #00754A;
+  box-shadow: 0 4px 0 #00754A;
+}
+
+.modal-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  text-align: left;
+  background: #F7F7F7;
+  padding: 0.85rem 1rem;
+  border-radius: var(--radius-md);
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.modal-details .modal-detail-row {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px dashed #DDD;
+  padding-bottom: 0.25rem;
+}
+
+.modal-details .modal-detail-row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.modal-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  align-items: center;
+}
+
+.modal-note {
+  font-size: 0.8rem;
+  color: #777777;
+  text-align: center;
+}
+
+/* --------------------------------------------------------------------------
+   11. Toast Notification
+   -------------------------------------------------------------------------- */
+.toast {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: #111111;
+  color: #FFFFFF;
+  padding: 0.75rem 1.4rem;
+  border-radius: var(--radius-full);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.92rem;
+  font-weight: 700;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  z-index: 2000;
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+}
+
+.toast.show {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+/* --------------------------------------------------------------------------
+   12. Footer
+   -------------------------------------------------------------------------- */
+.app-footer {
+  background: #141414;
+  color: #999999;
+  padding: 2.25rem 1.25rem;
+  font-size: 0.85rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.footer-inner {
+  max-width: 1240px;
+  margin: 0 auto;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.footer-links {
+  font-weight: 700;
+  color: #DDDDDD;
+}
+
+.footer-sep {
+  margin: 0 0.4rem;
+  opacity: 0.5;
+}
+
+.footer-disclaimer {
+  max-width: 680px;
+  font-size: 0.78rem;
+  line-height: 1.5;
+  opacity: 0.75;
+}
+
+.footer-copyright {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #CCCCCC;
+  margin-top: 0.25rem;
+}
+
+/* --------------------------------------------------------------------------
+   13. Responsive Breakpoints
+   -------------------------------------------------------------------------- */
+@media (max-width: 640px) {
+  .header-inner {
+    padding: 0.6rem 0.9rem;
+    gap: 0.6rem;
+  }
+  
+  .logo-text .app-title {
+    font-size: 1.25rem;
+  }
+  
+  .mode-tab {
+    padding: 0.4rem 0.75rem;
+    font-size: 0.82rem;
+  }
+  
+  .main-container {
+    padding: 1rem 0.85rem 3rem;
+  }
+  
+  .mode-hero {
+    padding: 1rem;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .hero-quick-actions {
+    width: 100%;
+  }
+  
+  .hero-quick-actions .action-btn-secondary {
+    flex: 1;
+    justify-content: center;
+  }
+  
+  .control-group {
+    padding: 1.1rem 1rem;
+  }
+  
+  .drink-select-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  
+  .spell-card {
+    padding: 1.15rem;
+  }
+  
+  .modal-card {
+    padding: 1.25rem 1rem;
+  }
+  
+  .modal-spell-text {
+    font-size: 1.65rem;
+    padding: 1rem 0.75rem;
+  }
+}
