@@ -1,0 +1,70 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow one concurrent deployment
+concurrency:
+  group: 'pages'
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Configure Google Analytics
+        env:
+          GA_ID: ${{ vars.GA_ID || secrets.GA_ID }}
+        run: |
+          if [ -n "$GA_ID" ]; then
+            echo "Google Analytics ID found: configuring $GA_ID"
+            
+            # 1. Generate config.js
+            echo "const GTM_ID = '$GA_ID';" > config.js
+
+            # 2. Inject Google tag directly into index.html
+            python3 -c "
+            import os
+            ga_id = os.environ['GA_ID'].strip()
+            snippet = f'''  <!-- Google tag (gtag.js) -->\n  <script async src=\"https://www.googletagmanager.com/gtag/js?id={ga_id}\"></script>\n  <script>\n    window.dataLayer = window.dataLayer || [];\n    function gtag(){{dataLayer.push(arguments);}}\n    gtag('js', new Date());\n    gtag('config', '{ga_id}');\n  </script>\n'''
+            with open('index.html', 'r', encoding='utf-8') as f:
+                content = f.read()
+            if '<head>' in content:
+                content = content.replace('<head>', '<head>\n' + snippet, 1)
+                with open('index.html', 'w', encoding='utf-8') as f:
+                    f.write(content)
+                print('Successfully embedded Google Analytics tag into index.html')
+            else:
+                print('Warning: <head> tag not found in index.html')
+            "
+          else
+            echo "vars.GA_ID is not set. Generating empty config.js..."
+            echo "const GTM_ID = '';" > config.js
+          fi
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

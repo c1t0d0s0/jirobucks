@@ -102,6 +102,10 @@ const GTM_ID = 'G-XXXXXXXXXX'; // または 'GTM-XXXXXXX'
 
 ※ `config.js` が存在しない場合や `GTM_ID` が空の場合は、自動的に読み込みをスキップしエラーなく動作します。
 
+### 🚀 GitHub Pages への自動デプロイ
+`main` ブランチへプッシュすると、GitHub Actions により自動的に GitHub Pages へデプロイされます。
+Google Analytics を本番環境で有効化する場合は、リポジトリの **Settings > Secrets and variables > Actions > Variables** に `GA_ID`（例: `G-XXXXXXXXXX`）を設定してください。デプロイ時にタグが自動で埋め込まれます。
+
 ---
 
 ## 📄 ライセンス

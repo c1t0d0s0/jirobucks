@@ -101,6 +101,10 @@ const GTM_ID = 'G-XXXXXXXXXX'; // or 'GTM-XXXXXXX'
 
 If `config.js` is omitted or `GTM_ID` is empty, analytics tracking is safely skipped without errors.
 
+### 🚀 Automatic Deployment to GitHub Pages
+Pushing to the `main` branch automatically deploys the site to GitHub Pages via GitHub Actions.
+To enable Google Analytics on the deployed site, add a repository variable `GA_ID` (e.g. `G-XXXXXXXXXX`) under **Settings > Secrets and variables > Actions > Variables**. The workflow will automatically inject the tracking tag during deployment.
+
 ---
 
 ## 📄 License

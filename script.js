@@ -9,6 +9,11 @@
 // ==========================================================================
 function initAnalytics() {
   try {
+    // If analytics tag is already embedded in the HTML, avoid duplicate injection
+    if (window.gtag || document.querySelector('script[src*="googletagmanager.com"]')) {
+      return;
+    }
+
     if (typeof GTM_ID !== 'undefined' && GTM_ID && typeof GTM_ID === 'string') {
       const trimmedId = GTM_ID.trim();
       if (!trimmedId) return;
