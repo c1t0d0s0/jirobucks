@@ -2080,10 +2080,18 @@ function fallbackCopy(text) {
 }
 
 /**
+ * Known Japanese voice names by gender (Chrome / macOS / iOS / Windows / Edge)
+ * The Web Speech API doesn't expose voice gender, so voices are matched by name.
+ */
+const JA_FEMALE_VOICE_NAMES = ['google 日本語', 'kyoko', 'o-ren', 'nanami', 'aoi', 'mayu', 'shiori', 'ayumi', 'haruka', 'sayaka'];
+const JA_MALE_VOICE_NAMES = ['otoya', 'hattori', 'keita', 'daichi', 'naoki', 'ichiro'];
+
+/**
  * Voice selection helper for Speech Synthesis
  * Accurately finds native Japanese or native English voices
+ * For Japanese, gender 'male' returns null when no known male voice is installed
  */
-function getBestVoice(targetLang) {
+function getBestVoice(targetLang, gender = 'female') {
   if (!('speechSynthesis' in window)) return null;
   const voices = window.speechSynthesis.getVoices();
   if (!voices || voices.length === 0) return null;
@@ -2119,11 +2127,13 @@ function getBestVoice(targetLang) {
     const jaVoices = voices.filter(v => v.lang && (v.lang.toLowerCase().startsWith('ja') || v.lang.replace('_', '-').toLowerCase() === 'ja-jp'));
     if (jaVoices.length === 0) return null;
 
-    const preferredJaNames = ['google 日本語', 'kyoko', 'otoya', 'nanami', 'keita', 'ayumi', 'haruka', 'microsoft ayumi', 'microsoft ichiro'];
+    const preferredJaNames = gender === 'male' ? JA_MALE_VOICE_NAMES : JA_FEMALE_VOICE_NAMES;
     for (const name of preferredJaNames) {
       const found = jaVoices.find(v => v.name && v.name.toLowerCase().includes(name));
       if (found) return found;
     }
+
+    if (gender === 'male') return null;
 
     const defaultJa = jaVoices.find(v => v.default);
     if (defaultJa) return defaultJa;
@@ -2159,12 +2169,29 @@ function speakSpell() {
     if (enVoice) {
       utterance.voice = enVoice;
     }
+  } else if (state.mode === 'jiro') {
+    // Jiro calls are spoken in a male voice
+    utterance.lang = 'ja-JP';
+    utterance.rate = 1.0;
+
+    const maleVoice = getBestVoice('ja', 'male');
+    if (maleVoice) {
+      utterance.voice = maleVoice;
+      utterance.pitch = 1.0;
+    } else {
+      // No male Japanese voice installed: lower the pitch of the default voice instead
+      const jaVoice = getBestVoice('ja');
+      if (jaVoice) {
+        utterance.voice = jaVoice;
+      }
+      utterance.pitch = 0.6;
+    }
   } else {
     utterance.lang = 'ja-JP';
     utterance.rate = 1.0;
     utterance.pitch = 1.0;
 
-    const jaVoice = getBestVoice('ja');
+    const jaVoice = getBestVoice('ja', 'female');
     if (jaVoice) {
       utterance.voice = jaVoice;
     }
