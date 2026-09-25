@@ -1,0 +1,105 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <!-- Background Split: Jiro Yellow & Starbucks Emerald Green -->
+  <rect x="0" y="0" width="256" height="512" fill="#FFEE00" />
+  <rect x="256" y="0" width="256" height="512" fill="#00754A" />
+
+  <!-- Center divider (subtle dark line) -->
+  <line x1="256" y1="0" x2="256" y2="512" stroke="#18181B" stroke-width="2" stroke-opacity="0.15" />
+
+  <!-- ================= LEFT: RAMEN BOWL ================= -->
+  <g transform="translate(128, 272)">
+    <!-- Red Steam -->
+    <path d="M -36 -125 Q -22 -150 -36 -175 Q -48 -200 -36 -220" fill="none" stroke="#D91414" stroke-width="12" stroke-linecap="round"/>
+    <path d="M 0 -135 Q 14 -160 0 -185 Q -12 -210 0 -230" fill="none" stroke="#D91414" stroke-width="12" stroke-linecap="round"/>
+    <path d="M 36 -125 Q 50 -150 36 -175 Q 24 -200 36 -220" fill="none" stroke="#D91414" stroke-width="12" stroke-linecap="round"/>
+
+    <!-- Nori Seaweed Sheet (dark rectangular seaweed sticking out of bowl) -->
+    <polygon points="25,-55 60,-50 48,-5 15,-5" fill="#1C2826" rx="3"/>
+
+    <!-- Noodles being lifted (with warm amber contour for high contrast on yellow) -->
+    <path d="M -30 -85 L -30 15" stroke="#B45309" stroke-width="12" stroke-linecap="round"/>
+    <path d="M -10 -90 L -10 20" stroke="#B45309" stroke-width="12" stroke-linecap="round"/>
+    <path d="M 10 -95 L 10 18" stroke="#B45309" stroke-width="12" stroke-linecap="round"/>
+    <path d="M 30 -100 L 30 12" stroke="#B45309" stroke-width="12" stroke-linecap="round"/>
+    <!-- Yellow noodle fill -->
+    <path d="M -30 -85 L -30 15" stroke="#FDE047" stroke-width="8" stroke-linecap="round"/>
+    <path d="M -10 -90 L -10 20" stroke="#FDE047" stroke-width="8" stroke-linecap="round"/>
+    <path d="M 10 -95 L 10 18" stroke="#FDE047" stroke-width="8" stroke-linecap="round"/>
+    <path d="M 30 -100 L 30 12" stroke="#FDE047" stroke-width="8" stroke-linecap="round"/>
+
+    <!-- Chopsticks (Black lacquer with red accents) -->
+    <line x1="-85" y1="-75" x2="75" y2="-120" stroke="#18181B" stroke-width="15" stroke-linecap="round"/>
+    <line x1="-75" y1="-60" x2="85" y2="-105" stroke="#18181B" stroke-width="13" stroke-linecap="round"/>
+    <!-- Red decorative bands on chopsticks -->
+    <line x1="-75" y1="-78" x2="-55" y2="-84" stroke="#D91414" stroke-width="15"/>
+    <line x1="-65" y1="-63" x2="-45" y2="-69" stroke="#D91414" stroke-width="13"/>
+
+    <!-- Outer Bowl Silhouette (Black) -->
+    <path d="M -96 -5 Q -105 105 0 135 Q 105 105 96 -5 Z" fill="#18181B"/>
+
+    <!-- Foot / Base ring of bowl -->
+    <path d="M -42 122 L -48 142 Q 0 152 48 142 L 42 122 Z" fill="#18181B"/>
+
+    <!-- White Bowl Exterior -->
+    <path d="M -90 4 Q -98 98 0 126 Q 98 98 90 4 Q 60 16 0 16 Q -60 16 -90 4 Z" fill="#FFFFFF"/>
+
+    <!-- Inner Soup & Broth -->
+    <ellipse cx="0" cy="-5" rx="92" ry="26" fill="#18181B"/>
+    <ellipse cx="0" cy="-4" rx="86" ry="22" fill="#D91414"/>
+    <ellipse cx="0" cy="-2" rx="78" ry="17" fill="#6B3304"/>
+    <ellipse cx="0" cy="0" rx="68" ry="13" fill="#FCE082"/>
+
+    <!-- Naruto (Fish Cake) -->
+    <circle cx="-35" cy="-2" r="16" fill="#FFFFFF"/>
+    <circle cx="-35" cy="-2" r="11" fill="#E11D48"/>
+    <circle cx="-35" cy="-2" r="7" fill="#FFFFFF"/>
+    <circle cx="-35" cy="-2" r="3.5" fill="#E11D48"/>
+
+    <!-- Chashu Pork -->
+    <ellipse cx="28" cy="1" rx="20" ry="10" fill="#B96835" transform="rotate(-8 28 1)"/>
+    <ellipse cx="28" cy="1" rx="14" ry="6" fill="#E59866" transform="rotate(-8 28 1)"/>
+
+    <!-- Green Scallions / Cabbage accent -->
+    <circle cx="-5" cy="2" r="4" fill="#16A34A"/>
+    <circle cx="5" cy="-1" r="3.5" fill="#16A34A"/>
+    <circle cx="12" cy="4" r="3" fill="#16A34A"/>
+
+    <!-- Bowl Red Meander Pattern Stripe -->
+    <path d="M -75 32 Q -38 46 0 46 Q 38 46 75 32" fill="none" stroke="#D91414" stroke-width="12" stroke-linecap="round"/>
+  </g>
+
+  <!-- ================= RIGHT: STARBUCKS CUP ================= -->
+  <g transform="translate(384, 272)">
+    <!-- White Coffee Steam -->
+    <path d="M -36 -125 Q -22 -150 -36 -175 Q -48 -200 -36 -220" fill="none" stroke="#FFFFFF" stroke-width="12" stroke-linecap="round" stroke-opacity="0.95"/>
+    <path d="M 0 -135 Q 14 -160 0 -185 Q -12 -210 0 -230" fill="none" stroke="#FFFFFF" stroke-width="12" stroke-linecap="round" stroke-opacity="0.95"/>
+    <path d="M 36 -125 Q 50 -150 36 -175 Q 24 -200 36 -220" fill="none" stroke="#FFFFFF" stroke-width="12" stroke-linecap="round" stroke-opacity="0.95"/>
+
+    <!-- Cup Body (White) -->
+    <polygon points="-78,-65 78,-65 58,135 -58,135" fill="#FFFFFF"/>
+    <!-- Subtle Cup Right Shading -->
+    <path d="M 46 -65 L 78 -65 L 58 135 L 36 135 Z" fill="#E4E4E7"/>
+
+    <!-- Kraft Coffee Sleeve -->
+    <polygon points="-75,-12 75,-12 66,62 -66,62" fill="#C89666"/>
+    <!-- Sleeve top & bottom borders -->
+    <line x1="-74" y1="-8" x2="74" y2="-8" stroke="#DDB188" stroke-width="3"/>
+    <line x1="-65" y1="58" x2="65" y2="58" stroke="#A7764A" stroke-width="3"/>
+
+    <!-- Center Emblem on Sleeve: Dark Green Circle with White Star -->
+    <circle cx="0" cy="25" r="30" fill="#00623B"/>
+    <circle cx="0" cy="25" r="26" fill="none" stroke="#FFFFFF" stroke-width="2.5"/>
+    <!-- White 5-pointed star -->
+    <polygon points="0,12 6,23 19,23 9,30 13,42 0,34 -13,42 -9,30 -19,23 -6,23" fill="#FFFFFF"/>
+
+    <!-- Cup Rim Lip -->
+    <rect x="-85" y="-76" width="170" height="15" rx="7.5" fill="#FFFFFF"/>
+
+    <!-- Cup Lid -->
+    <path d="M -81 -76 L -74 -105 L 74 -105 L 81 -76 Z" fill="#F4F4F5"/>
+    <rect x="-56" y="-118" width="112" height="15" rx="7.5" fill="#E4E4E7"/>
+    <!-- Lid Drinking Spout Contour -->
+    <ellipse cx="0" cy="-117" rx="14" ry="4" fill="#D4D4D8"/>
+    <rect x="-6" y="-119" width="12" height="4" rx="2" fill="#71717A"/>
+  </g>
+</svg>
