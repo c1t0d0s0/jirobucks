@@ -166,10 +166,10 @@ const I18N = {
     labelShots: 'エスプレッソ ショット',
     optShotsStandard: '標準量',
     optShotsNone: 'ショット抜き (なし)',
-    optShotsSingle: '+1 ショット追加 (ソロ/+55円)',
-    optShotsDouble: '+2 ショット追加 (ディオ/+110円)',
-    optShotsTriple: 'トリプル (3ショット)',
-    optShotsQuad: 'クアッド (4ショット)',
+    optShotsSingle: '+1 ショット追加 (+55円)',
+    optShotsDouble: '+2 ショット追加 (+110円)',
+    optShotsTriple: '+3 ショット追加 (+165円)',
+    optShotsQuad: '+4 ショット追加 (+220円)',
     labelBeans: '豆・カフェイン変更',
     optBeansStandard: '標準エスプレッソ',
     optBeansDecaf: 'ディカフェ変更 (カフェインレス/+55円)',
@@ -325,10 +325,10 @@ const I18N = {
     labelShots: 'Espresso Shots',
     optShotsStandard: 'Standard Shot',
     optShotsNone: 'No Espresso Shot',
-    optShotsSingle: '+1 Extra Shot (Solo/+¥55)',
-    optShotsDouble: '+2 Extra Shots (Doppio/+¥110)',
-    optShotsTriple: 'Triple (3 Shots)',
-    optShotsQuad: 'Quad (4 Shots)',
+    optShotsSingle: '+1 Extra Shot (+¥55)',
+    optShotsDouble: '+2 Extra Shots (+¥110)',
+    optShotsTriple: '+3 Extra Shots (+¥165)',
+    optShotsQuad: '+4 Extra Shots (+¥220)',
     labelBeans: 'Beans & Decaf',
     optBeansStandard: 'Standard Roast',
     optBeansDecaf: 'Decaf (+¥55)',
@@ -381,19 +381,16 @@ const STARBUCKS_DRINKS = [
   { id: 'caramel_macchiato', category: 'espresso', ja: 'キャラメル マキアート', en: 'Caramel Macchiato', defaultHotIce: 'both', hasWhip: false, hasSyrup: true, hasEspresso: true },
   { id: 'caffe_mocha', category: 'espresso', ja: 'カフェ モカ', en: 'Caffè Mocha', defaultHotIce: 'both', hasWhip: true, hasSyrup: true, hasEspresso: true },
   { id: 'white_mocha', category: 'espresso', ja: 'ホワイト モカ', en: 'White Mocha', defaultHotIce: 'both', hasWhip: true, hasSyrup: true, hasEspresso: true },
-  { id: 'pumpkin_spice_latte', category: 'espresso', ja: 'パンプキン スパイス ラテ', en: 'Pumpkin Spice Latte', defaultHotIce: 'both', hasWhip: true, hasSyrup: true, hasEspresso: true },
-  { id: 'cinnamon_dolce_latte', category: 'espresso', ja: 'シナモン ドルチェ ラテ', en: 'Cinnamon Dolce Latte', defaultHotIce: 'both', hasWhip: true, hasSyrup: true, hasEspresso: true },
 
   // Frappuccino
   { id: 'dark_mocha_frap', category: 'frappuccino', ja: 'ダーク モカ チップ フラペチーノ', en: 'Dark Mocha Chip Frappuccino', defaultHotIce: 'iced', hasWhip: true, hasSyrup: true, hasEspresso: false },
   { id: 'matcha_frap', category: 'frappuccino', ja: '抹茶 クリーム フラペチーノ', en: 'Matcha Cream Frappuccino', defaultHotIce: 'iced', hasWhip: true, hasSyrup: true, hasEspresso: false },
   { id: 'caramel_frap', category: 'frappuccino', ja: 'キャラメル フラペチーノ', en: 'Caramel Frappuccino', defaultHotIce: 'iced', hasWhip: true, hasSyrup: true, hasEspresso: false },
   { id: 'vanilla_frap', category: 'frappuccino', ja: 'バニラ クリーム フラペチーノ', en: 'Vanilla Cream Frappuccino', defaultHotIce: 'iced', hasWhip: true, hasSyrup: true, hasEspresso: false },
-  { id: 'strawberry_frap', category: 'frappuccino', ja: 'ストロベリー クリーム フラペチーノ', en: 'Strawberries and Crème Frappuccino', defaultHotIce: 'iced', hasWhip: true, hasSyrup: true, hasEspresso: false },
 
   // Coffee
   { id: 'drip_coffee', category: 'coffee', ja: 'ドリップ コーヒー', en: 'Drip Coffee', defaultHotIce: 'both', hasWhip: false, hasSyrup: false, hasEspresso: false },
-  { id: 'cafe_misto', category: 'coffee', ja: 'カフェ ミスト', en: 'Caffè Misto', defaultHotIce: 'both', hasWhip: false, hasSyrup: false, hasEspresso: false },
+  { id: 'cafe_misto', category: 'coffee', ja: 'カフェ ミスト', en: 'Caffè Misto', defaultHotIce: 'hot', hasWhip: false, hasSyrup: false, hasEspresso: false },
 
   // Tea & Others
   { id: 'chai_tea_latte', category: 'tea', ja: 'チャイ ティー ラテ', en: 'Chai Tea Latte', defaultHotIce: 'both', hasWhip: false, hasSyrup: true, hasEspresso: false },
@@ -462,7 +459,7 @@ const STARBUCKS_PRESETS = [
     emoji: '⚡',
     ja: 'トリプル・グランデ・ラテ',
     en: 'Triple Grande Latte',
-    state: { category: 'espresso', drinkId: 'starbucks_latte', temp: 'hot', size: 'grande', milk: 'regular', shots: 'triple', beans: 'standard', syrup: 'default', whip: 'default', drizzle: 'none', icemilk: 'default', frapcustom: 'none' }
+    state: { category: 'espresso', drinkId: 'starbucks_latte', temp: 'hot', size: 'grande', milk: 'regular', shots: 'single', beans: 'standard', syrup: 'default', whip: 'default', drizzle: 'none', icemilk: 'default', frapcustom: 'none' }
   },
   {
     id: 'healthy_whitemocha',
@@ -490,7 +487,7 @@ const STARBUCKS_PRESETS = [
     emoji: '🌱',
     ja: 'ソイ・ディカフェ・アメリカーノ',
     en: 'Soy Decaf Americano',
-    state: { category: 'espresso', drinkId: 'caffe_americano', temp: 'iced', size: 'grande', milk: 'soy', shots: 'standard', beans: 'decaf', syrup: 'none', whip: 'none', drizzle: 'none', icemilk: 'default', frapcustom: 'none' }
+    state: { category: 'espresso', drinkId: 'caffe_americano', temp: 'iced', size: 'grande', milk: 'soy', shots: 'standard', beans: 'decaf', syrup: 'default', whip: 'default', drizzle: 'none', icemilk: 'default', frapcustom: 'none' }
   },
   {
     id: 'red_eye',
@@ -542,32 +539,11 @@ const STARBUCKS_PRESETS = [
     state: { category: 'espresso', drinkId: 'caffe_mocha', temp: 'hot', size: 'tall', milk: 'regular', shots: 'standard', beans: 'standard', syrup: 'whitemocha', whip: 'default', drizzle: 'none', icemilk: 'default', frapcustom: 'none' }
   },
   {
-    id: 'captain_crunch',
-    emoji: '🍓',
-    ja: 'キャプテン クランチ (裏メニュー)',
-    en: 'Captain Crunch (Secret Menu)',
-    state: { category: 'frappuccino', drinkId: 'strawberry_frap', temp: 'iced', size: 'tall', milk: 'regular', shots: 'none', beans: 'standard', syrup: 'caramel', whip: 'default', drizzle: 'none', icemilk: 'default', frapcustom: 'chocolatechip' }
-  },
-  {
-    id: 'neapolitan_frap',
-    emoji: '🍨',
-    ja: 'ネオポリタン フラペチーノ (3色アイス風)',
-    en: 'Neapolitan Frappuccino',
-    state: { category: 'frappuccino', drinkId: 'strawberry_frap', temp: 'iced', size: 'tall', milk: 'regular', shots: 'none', beans: 'standard', syrup: 'vanilla', whip: 'default', drizzle: 'chocolate', icemilk: 'default', frapcustom: 'none' }
-  },
-  {
     id: 'the_nutella',
     emoji: '🍫',
     ja: 'ヌテラ (カフェミスト+ヘーゼル+チョコ)',
     en: 'The Nutella (Cafe Misto + Hazelnut)',
     state: { category: 'coffee', drinkId: 'cafe_misto', temp: 'hot', size: 'tall', milk: 'regular', shots: 'none', beans: 'standard', syrup: 'hazelnut', whip: 'default', drizzle: 'chocolate', icemilk: 'default', frapcustom: 'none' }
-  },
-  {
-    id: 'chocolate_pumpkin',
-    emoji: '🎃',
-    ja: 'チョコレート パンプキン (秋の裏メニュー)',
-    en: 'Chocolate Pumpkin (Secret Menu)',
-    state: { category: 'espresso', drinkId: 'pumpkin_spice_latte', temp: 'hot', size: 'tall', milk: 'regular', shots: 'standard', beans: 'standard', syrup: 'default', whip: 'default', drizzle: 'chocolate', icemilk: 'default', frapcustom: 'none' }
   }
 ];
 
@@ -701,9 +677,6 @@ function calculateStarbucksMetrics(sbState, isJa) {
     matcha_tea_latte: { hot: 225, iced: 168 },
     hojicha_tea_latte: { hot: 162, iced: 140 },
     drip_coffee: { hot: 18, iced: 10 },
-    pumpkin_spice_latte: { hot: 380, iced: 300 },
-    cinnamon_dolce_latte: { hot: 340, iced: 260 },
-    strawberry_frap: { iced: 356 },
     cafe_misto: { hot: 126, iced: 95 }
   };
 
@@ -713,8 +686,18 @@ function calculateStarbucksMetrics(sbState, isJa) {
   const sizeMult = { short: 0.72, tall: 1.0, grande: 1.35, venti: 1.70 }[sbState.size] || 1.0;
   cal = cal * sizeMult;
 
-  const hasMilk = drink.id !== 'drip_coffee' && (drink.id !== 'caffe_americano' || sbState.milk !== 'regular');
-  if (hasMilk && sbState.milk !== 'regular') {
+  if (drink.id === 'caffe_americano' && sbState.milk !== 'regular') {
+    // Americano has no milk by default, so the chosen milk is added on top
+    const milkAdd = {
+      lowfat: 20,
+      nonfat: 15,
+      soy: 25,
+      almond: 10,
+      oat: 30,
+      breve: 90
+    }[sbState.milk] || 0;
+    cal += milkAdd * sizeMult;
+  } else if (drink.id !== 'drip_coffee' && sbState.milk !== 'regular') {
     const milkDelta = {
       lowfat: -30,
       nonfat: -60,
@@ -977,16 +960,15 @@ function compileJiroSpell() {
  */
 /**
  * Starbucks Base Shot Map and Barista Calling Abbreviations
+ * Venti latte-type drinks: 2 shots when hot, 3 shots when iced
  */
 const STARBUCKS_BASE_SHOTS = {
-  starbucks_latte: { short: 1, tall: 1, grande: 2, venti: 3 },
-  cappuccino: { short: 1, tall: 1, grande: 2, venti: 3 },
-  caffe_mocha: { short: 1, tall: 1, grande: 2, venti: 3 },
-  white_mocha: { short: 1, tall: 1, grande: 2, venti: 3 },
-  caramel_macchiato: { short: 1, tall: 1, grande: 2, venti: 3 },
-  caffe_americano: { short: 1, tall: 2, grande: 3, venti: 4 },
-  pumpkin_spice_latte: { short: 1, tall: 1, grande: 2, venti: 3 },
-  cinnamon_dolce_latte: { short: 1, tall: 1, grande: 2, venti: 3 }
+  starbucks_latte: { short: 1, tall: 1, grande: 2, venti: { hot: 2, iced: 3 } },
+  cappuccino: { short: 1, tall: 1, grande: 2, venti: { hot: 2, iced: 3 } },
+  caffe_mocha: { short: 1, tall: 1, grande: 2, venti: { hot: 2, iced: 3 } },
+  white_mocha: { short: 1, tall: 1, grande: 2, venti: { hot: 2, iced: 3 } },
+  caramel_macchiato: { short: 1, tall: 1, grande: 2, venti: { hot: 2, iced: 3 } },
+  caffe_americano: { short: 1, tall: 2, grande: 3, venti: 4 }
 };
 
 const STARBUCKS_CALL_NAMES = {
@@ -995,9 +977,7 @@ const STARBUCKS_CALL_NAMES = {
   caffe_americano: { ja: 'アメリカーノ', en: 'Americano' },
   caramel_macchiato: { ja: 'キャラメル マキアート', en: 'Caramel Macchiato' },
   caffe_mocha: { ja: 'モカ', en: 'Mocha' },
-  white_mocha: { ja: 'ホワイト モカ', en: 'White Mocha' },
-  pumpkin_spice_latte: { ja: 'パンプキン スパイス ラテ', en: 'Pumpkin Spice Latte' },
-  cinnamon_dolce_latte: { ja: 'シナモン ドルチェ ラテ', en: 'Cinnamon Dolce Latte' }
+  white_mocha: { ja: 'ホワイト モカ', en: 'White Mocha' }
 };
 
 /**
@@ -1005,10 +985,8 @@ const STARBUCKS_CALL_NAMES = {
  * Identifies recognized specialty combinations and secret menu drinks:
  * - Red Eye, Black Eye, Green Eye, Eye of the Tiger
  * - Dirty Chai, Dirty Matcha
- * - Secret Menu: Biscotti Frappuccino, Captain Crunch, Neapolitan Frappuccino,
- *   Raspberry Cheesecake, Chocolate Turtle, French Vanilla, Blended Strawberry Lemonade,
- *   Oreo Frappuccino, Tuxedo Mocha (Zebra Mocha), The Nutella, Super Cream Frappuccino,
- *   Three C's, Chocolate Pumpkin
+ * - Secret Menu: Oreo Frappuccino, Super Cream Frappuccino, Tuxedo Mocha (Zebra Mocha),
+ *   The Nutella, French Vanilla
  */
 function detectStarbucksAlias(sbState) {
   const { drinkId, shots, syrup, drizzle, frapcustom, milk, whip } = sbState;
@@ -1066,7 +1044,7 @@ function detectStarbucksAlias(sbState) {
         noteJa: 'チャイティーラテにエスプレッソを追加した人気の濃厚カスタム',
         noteEn: 'Chai Tea Latte with espresso added'
       };
-    } else if (drinkId === 'matcha_tea_latte' || drinkId === 'matcha_frap') {
+    } else if (drinkId === 'matcha_tea_latte') {
       return {
         nameJa: 'ダーティーマッチャ',
         nameEn: 'Dirty Matcha',
@@ -1079,42 +1057,6 @@ function detectStarbucksAlias(sbState) {
   }
 
   // 2. Secret Menu Items (starbucks-secret-menu1.jpg)
-
-  // Captain Crunch: Strawberries & Creme with caramel/hazelnut & choc chips
-  if (drinkId === 'strawberry_frap' && (syrup === 'caramel' || syrup === 'hazelnut') && (frapcustom === 'chocolatechip' || frapcustom === 'allcustom')) {
-    return {
-      nameJa: 'キャプテン クランチ',
-      nameEn: 'Captain Crunch',
-      fullNameJa: 'キャプテン クランチ (Captain Crunch)',
-      fullNameEn: 'Captain Crunch (キャプテン クランチ)',
-      noteJa: 'ストロベリー＋ナッツ系シロップ＋チョコチップの有名裏メニュー',
-      noteEn: 'Strawberries & Creme with caramel/hazelnut & chocolate chips'
-    };
-  }
-
-  // Neapolitan Frappuccino: Strawberries & Creme with vanilla and mocha/chocolate
-  if (drinkId === 'strawberry_frap' && (syrup === 'vanilla' || drizzle === 'chocolate' || drizzle === 'both')) {
-    return {
-      nameJa: 'ネオポリタン フラペチーノ',
-      nameEn: 'Neapolitan Frappuccino',
-      fullNameJa: 'ネオポリタン フラペチーノ (Neapolitan Frappuccino)',
-      fullNameEn: 'Neapolitan Frappuccino (ネオポリタン フラペチーノ)',
-      noteJa: 'ストロベリー＋バニラ＋チョコの3色アイス風フラペチーノ',
-      noteEn: 'Strawberries & Creme with vanilla and mocha chocolate'
-    };
-  }
-
-  // Blended Strawberry Lemonade: Strawberries & Creme without whip/nonfat
-  if (drinkId === 'strawberry_frap' && (milk === 'nonfat' || whip === 'none')) {
-    return {
-      nameJa: 'ブレンデッド ストロベリー レモネード',
-      nameEn: 'Blended Strawberry Lemonade',
-      fullNameJa: 'ブレンデッド ストロベリー レモネード (Blended Strawberry Lemonade)',
-      fullNameEn: 'Blended Strawberry Lemonade (ブレンデッド ストロベリー レモネード)',
-      noteJa: 'ストロベリー果汁感を爽やかに楽しむフローズンカスタム',
-      noteEn: 'A refreshing blended strawberry lemonade style drink'
-    };
-  }
 
   // Oreo Frappuccino: Dark mocha chip with white mocha OR Vanilla frap with chips & chocolate
   if ((drinkId === 'dark_mocha_frap' && syrup === 'whitemocha') ||
@@ -1155,7 +1097,7 @@ function detectStarbucksAlias(sbState) {
   }
 
   // The Nutella: Cafe Misto or Mocha + hazelnut + chocolate/caramel drizzle
-  if ((drinkId === 'cafe_misto' && (syrup === 'hazelnut' || drizzle === 'chocolate' || drizzle === 'caramel' || drizzle === 'both')) ||
+  if ((drinkId === 'cafe_misto' && syrup === 'hazelnut' && (drizzle === 'chocolate' || drizzle === 'caramel' || drizzle === 'both')) ||
       (drinkId === 'caffe_mocha' && syrup === 'hazelnut' && (drizzle === 'caramel' || drizzle === 'both'))) {
     return {
       nameJa: 'ヌテラ',
@@ -1167,8 +1109,8 @@ function detectStarbucksAlias(sbState) {
     };
   }
 
-  // French Vanilla Flavor: Vanilla + hazelnut
-  if (syrup === 'hazelnut' && (drinkId === 'vanilla_frap' || syrup === 'vanilla')) {
+  // French Vanilla Flavor: Vanilla Cream Frappuccino + hazelnut
+  if (drinkId === 'vanilla_frap' && syrup === 'hazelnut') {
     return {
       nameJa: 'フレンチ バニラ',
       nameEn: 'French Vanilla',
@@ -1176,30 +1118,6 @@ function detectStarbucksAlias(sbState) {
       fullNameEn: 'French Vanilla (フレンチ バニラ)',
       noteJa: 'バニラとヘーゼルナッツシロップを合わせた芳醇で香ばしいフレンチバニラ風味',
       noteEn: 'Half hazelnut and half vanilla'
-    };
-  }
-
-  // Three C's: Cinnamon Dolce Latte + caramel + chocolate
-  if (drinkId === 'cinnamon_dolce_latte' && (syrup === 'caramel' || drizzle === 'chocolate' || drizzle === 'both')) {
-    return {
-      nameJa: 'スリーシーズ',
-      nameEn: 'Three C\'s',
-      fullNameJa: 'スリーシーズ (Three C\'s)',
-      fullNameEn: 'Three C\'s (スリーシーズ)',
-      noteJa: 'シナモン (Cinnamon) ＋ キャラメル (Caramel) ＋ チョコ (Chocolate) の3つのC',
-      noteEn: 'Cinnamon Dolce latte with caramel and chocolate mocha syrup'
-    };
-  }
-
-  // Chocolate Pumpkin: Pumpkin Spice Latte + chocolate drizzle / white mocha
-  if (drinkId === 'pumpkin_spice_latte' && (drizzle === 'chocolate' || drizzle === 'both' || syrup === 'whitemocha')) {
-    return {
-      nameJa: 'チョコレート パンプキン',
-      nameEn: 'Chocolate Pumpkin',
-      fullNameJa: 'チョコレート パンプキン (Chocolate Pumpkin)',
-      fullNameEn: 'Chocolate Pumpkin (チョコレート パンプキン)',
-      noteJa: 'パンプキンスパイスラテにチョコレートを追加したパンプキンブレッド風カスタム',
-      noteEn: 'Pumpkin Spice Latte with chocolate syrup for a pumpkin chip bread taste'
     };
   }
 
@@ -1255,7 +1173,8 @@ function compileStarbucksSpell() {
   // 3. Shots for Espresso Drinks (ソロ / ダブル / トリプル / クアッド)
   // In barista calling, shot modifiers precede the cup size! e.g. ホット [ダブル] [トール] [ラテ]
   if (isEspresso) {
-    const baseShots = (STARBUCKS_BASE_SHOTS[drink.id] && STARBUCKS_BASE_SHOTS[drink.id][sb.size]) || 1;
+    const sizeShots = STARBUCKS_BASE_SHOTS[drink.id] && STARBUCKS_BASE_SHOTS[drink.id][sb.size];
+    const baseShots = (typeof sizeShots === 'object' ? sizeShots[sb.temp] : sizeShots) || 1;
     let totalShots = baseShots;
     let isModified = false;
 
@@ -1269,10 +1188,10 @@ function compileStarbucksSpell() {
       totalShots = baseShots + 2;
       isModified = true;
     } else if (sb.shots === 'triple') {
-      totalShots = 3;
+      totalShots = baseShots + 3;
       isModified = true;
     } else if (sb.shots === 'quad') {
-      totalShots = 4;
+      totalShots = baseShots + 4;
       isModified = true;
     }
 
@@ -1422,6 +1341,11 @@ function compileStarbucksSpell() {
       both: { ja: 'キャラメル & チョコWソース追加', en: 'Double Drizzle (Caramel & Chocolate)' },
       honey: { ja: 'はちみつ追加', en: 'Add Honey' }
     };
+    // Caramel Macchiato already comes with caramel sauce
+    if (drink.id === 'caramel_macchiato') {
+      drizzleMap.caramel = { ja: 'キャラメルソース多め', en: 'Extra Caramel Drizzle' };
+      drizzleMap.both = { ja: 'キャラメルソース多め チョコソース追加', en: 'Extra Caramel Drizzle & Chocolate Drizzle' };
+    }
     terms.push(drizzleMap[sb.drizzle].ja);
     termsEn.push(drizzleMap[sb.drizzle].en);
     breakdown.push({ label: `✨ ${isJa ? drizzleMap[sb.drizzle].ja : drizzleMap[sb.drizzle].en}`, hl: true });
@@ -1684,15 +1608,31 @@ function adjustStarbucksVisibility(drink) {
     if (tempField) tempField.style.display = 'none';
     if (iceField) iceField.style.display = 'none';
     state.starbucks.temp = 'iced';
+  } else if (drink.defaultHotIce === 'hot') {
+    if (frapField) frapField.style.display = 'none';
+    if (tempField) tempField.style.display = 'none';
+    if (iceField) iceField.style.display = 'none';
+    state.starbucks.temp = 'hot';
   } else {
     if (frapField) frapField.style.display = 'none';
     if (tempField) tempField.style.display = 'block';
     if (iceField) iceField.style.display = state.starbucks.temp === 'iced' ? 'block' : 'none';
   }
 
+  // Short size is hot-only (not available for iced drinks or Frappuccino)
+  const sizeGroup = document.querySelector('[data-sb-param="size"]');
+  if (sizeGroup) {
+    const sizeShortChip = sizeGroup.querySelector('.chip[data-val="short"]');
+    if (sizeShortChip) sizeShortChip.style.display = state.starbucks.temp === 'iced' ? 'none' : '';
+  }
+  if (state.starbucks.temp === 'iced' && state.starbucks.size === 'short') {
+    state.starbucks.size = 'tall';
+  }
+
   // Drip coffee doesn't have milk/shots by default unless customized
   if (drink.id === 'drip_coffee') {
     if (milkField) milkField.style.display = 'none';
+    state.starbucks.milk = 'regular';
   } else {
     if (milkField) milkField.style.display = 'block';
   }
@@ -1705,12 +1645,16 @@ function adjustStarbucksVisibility(drink) {
     const syrupExtraChip = syrupGroup.querySelector('.chip[data-val="extra"]');
     const syrupLightChip = syrupGroup.querySelector('.chip[data-val="light"]');
 
-    if (syrupNoneChip) syrupNoneChip.style.display = drink.hasSyrup ? '' : 'none';
+    // Mocha drinks are flavored with sauce; removing it would just make a latte
+    const canRemoveSyrup = drink.hasSyrup && drink.id !== 'caffe_mocha' && drink.id !== 'white_mocha';
+    if (syrupNoneChip) syrupNoneChip.style.display = canRemoveSyrup ? '' : 'none';
     if (syrupExtraChip) syrupExtraChip.style.display = drink.hasSyrup ? '' : 'none';
     if (syrupLightChip) syrupLightChip.style.display = drink.hasSyrup ? '' : 'none';
 
     // If a drink without syrup has an invalid syrup state, reset to 'default'
     if (!drink.hasSyrup && (state.starbucks.syrup === 'none' || state.starbucks.syrup === 'extra' || state.starbucks.syrup === 'light')) {
+      state.starbucks.syrup = 'default';
+    } else if (!canRemoveSyrup && state.starbucks.syrup === 'none') {
       state.starbucks.syrup = 'default';
     }
   }
@@ -1739,13 +1683,59 @@ function adjustStarbucksVisibility(drink) {
 
   // Conditional Shots options:
   // Drinks without espresso by default (e.g. Drip Coffee, Tea Latte, Frappuccino) don't have "none" (ショット抜き)
+  // Americano without shots would be plain hot water
   const shotsGroup = document.querySelector('[data-sb-param="shots"]');
+  const canRemoveShots = drink.hasEspresso && drink.id !== 'caffe_americano';
   if (shotsGroup) {
     const shotsNoneChip = shotsGroup.querySelector('.chip[data-val="none"]');
-    if (shotsNoneChip) shotsNoneChip.style.display = drink.hasEspresso ? '' : 'none';
-    if (!drink.hasEspresso && state.starbucks.shots === 'none') {
-      state.starbucks.shots = 'standard';
-    }
+    if (shotsNoneChip) shotsNoneChip.style.display = canRemoveShots ? '' : 'none';
+  }
+  if (!canRemoveShots && state.starbucks.shots === 'none') {
+    state.starbucks.shots = 'standard';
+  }
+
+  // Conditional Ice/Milk options:
+  // Americano and Drip Coffee have no milk, so "extra milk" doesn't apply
+  const iceMilkGroup = document.querySelector('[data-sb-param="icemilk"]');
+  const hasMilkBase = drink.id !== 'caffe_americano' && drink.id !== 'drip_coffee';
+  if (iceMilkGroup) {
+    const lightIceExtraMilkChip = iceMilkGroup.querySelector('.chip[data-val="lightice-extramilk"]');
+    if (lightIceExtraMilkChip) lightIceExtraMilkChip.style.display = hasMilkBase ? '' : 'none';
+  }
+  if (!hasMilkBase && state.starbucks.icemilk === 'lightice-extramilk') {
+    state.starbucks.icemilk = 'default';
+  }
+
+  // Conditional Frappuccino options:
+  // Only Matcha and Vanilla Cream Frappuccino have a powder to add
+  const frapGroup = document.querySelector('[data-sb-param="frapcustom"]');
+  const hasPowder = drink.id === 'matcha_frap' || drink.id === 'vanilla_frap';
+  if (frapGroup) {
+    const extraPowderChip = frapGroup.querySelector('.chip[data-val="extrapowder"]');
+    const allCustomChip = frapGroup.querySelector('.chip[data-val="allcustom"]');
+    if (extraPowderChip) extraPowderChip.style.display = hasPowder ? '' : 'none';
+    if (allCustomChip) allCustomChip.style.display = hasPowder ? '' : 'none';
+  }
+  if (!hasPowder && state.starbucks.frapcustom === 'extrapowder') {
+    state.starbucks.frapcustom = 'none';
+  } else if (!hasPowder && state.starbucks.frapcustom === 'allcustom') {
+    state.starbucks.frapcustom = 'chocolatechip';
+  }
+
+  // Conditional Beans options:
+  // Bean changes only apply when the drink contains coffee; Ristretto only applies to espresso shots
+  const shots = state.starbucks.shots;
+  const hasShots = (drink.hasEspresso && shots !== 'none') || (shots !== 'none' && shots !== 'standard');
+  const hasCoffee = hasShots || drink.id === 'drip_coffee';
+  const beansField = document.getElementById('sb-beans-field');
+  if (beansField) beansField.style.display = hasCoffee ? 'block' : 'none';
+  const beansGroup = document.querySelector('[data-sb-param="beans"]');
+  if (beansGroup) {
+    const ristrettoChip = beansGroup.querySelector('.chip[data-val="ristretto"]');
+    if (ristrettoChip) ristrettoChip.style.display = hasShots ? '' : 'none';
+  }
+  if (!hasCoffee || (!hasShots && state.starbucks.beans === 'ristretto')) {
+    state.starbucks.beans = 'standard';
   }
 }
 
@@ -2251,6 +2241,12 @@ function generateRandomSpell() {
     const drizzles = ['none', 'caramel', 'chocolate', 'both', 'honey'];
     state.starbucks.drizzle = drizzles[Math.floor(Math.random() * drizzles.length)];
 
+    const iceMilks = ['default', 'lightice-extramilk', 'noice', 'extraice'];
+    state.starbucks.icemilk = iceMilks[Math.floor(Math.random() * iceMilks.length)];
+
+    const frapCustoms = ['none', 'extrapowder', 'chocolatechip', 'allcustom'];
+    state.starbucks.frapcustom = frapCustoms[Math.floor(Math.random() * frapCustoms.length)];
+
     renderStarbucksDrinks();
     syncStarbucksChips();
   }
@@ -2443,12 +2439,9 @@ function setupOptionListeners() {
         group.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
         chip.classList.add('active');
 
-        // If temperature changed, adjust ice field
-        if (param === 'temp') {
-          const iceField = document.getElementById('sb-ice-field');
-          if (iceField) {
-            iceField.style.display = val === 'iced' ? 'block' : 'none';
-          }
+        // If temperature or shots changed, re-apply visibility rules (ice field, Short size, beans)
+        if (param === 'temp' || param === 'shots') {
+          syncStarbucksChips();
         }
 
         updateSpellDisplay();

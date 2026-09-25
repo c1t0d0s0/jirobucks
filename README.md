@@ -19,15 +19,24 @@ Both **Ramen Jiro (ラーメン二郎)** and **Starbucks (スターバックス)
 
 - **Dual-Mode System**:
   - **🍜 Ramen Jiro Mode**: Customize noodle firmness & amount (at ticket presentation) and toppings (garlic, veggies, pork fat, soy tare). Supports abbreviations like *Zen-mashi* and *Zen-mashimashi*.
-  - **☕ Starbucks Mode**: Customize size, temperature, milk alternatives, decaf/espresso shots, syrups, whipped cream, drizzles, and Frappuccino toppings. Formats naturally into authentic barista-preferred order sequences.
+  - **☕ Starbucks Mode**:
+    - Base drinks across Coffee, Espresso, Frappuccino, and Tea & Others
+    - Size (Short / Tall / Grande / Venti®) & temperature (Hot / Iced). Short is hot-only, and hot-only drinks (Cappuccino, Caffè Misto) lock the temperature automatically
+    - Milk changes (low-fat, non-fat, soy, almond, oat, breve)
+    - Espresso customizations: decaf, blonde, ristretto, and +1 to +4 extra shots (+¥55 per shot), added on top of each drink's base shots (e.g. Venti latte-type drinks: 2 shots hot / 3 shots iced)
+    - Syrups, whipped cream, sauces, and Frappuccino-only toppings
+    - Combinations that can't actually be ordered are hidden automatically (e.g. an Americano without shots, extra powder on a Caramel Frappuccino, Short for iced drinks)
+    - Formats naturally into barista-style order sequences using short call names (e.g. "Latte", "Mocha")
+- **🏷️ Starbucks Nickname Detection**:
+  - Recognizes well-known combinations and secret-menu drinks and shows their nickname: *Red Eye / Black Eye / Green Eye / Eye of the Tiger*, *Dirty Chai / Dirty Matcha*, *Oreo Frappuccino*, *Super Cream Frappuccino*, *Tuxedo Mocha*, *The Nutella*, and *French Vanilla*.
 - **🔥 Estimated Calories & Mode-Specific Index**:
   - Automatically calculates real-time estimated calories (`~1,570 kcal`) based on selected toppings or syrup/milk ratios.
-  - **Jiro Mode**: Evaluates guilt level (`Guilty Level: ★★★☆☆ (Authentic Jiro)` to `★★★★★ (Guilt Overload)`).
-  - **Starbucks Mode**: Evaluates healthiness (`Diet Index: ★★★★☆ (Light & Clean)` to `★☆☆☆☆ (Decadent Treat)`).
-- **📱 "Show to Staff" Fullscreen Mode (店員に見せる)**:
+  - **Jiro Mode**: Evaluates guilt level (`Guilty Level: ★☆☆☆☆ (Angelic Light)` to `★★★★★ (Max Transcendence)`).
+  - **Starbucks Mode**: Evaluates healthiness (`Diet Index: ★★★★★ (Ultra Light)` to `★☆☆☆☆ (Devilishly Rich)`).
+- **📱 "Show to Staff" Fullscreen Mode**:
   - Displays your order in ultra-large, high-contrast text on a clean card. Perfect for showing your smartphone screen across the counter without speaking!
 - **⚡ 1-Tap Quick Presets**:
-  - Instantly load popular combinations like *Zen-mashi*, *The Classic*, *Beginner Safe*, *Chomolungma*, *Triple Grande Latte*, or *Devil's Matcha Frappuccino*.
+  - Instantly load popular combinations like *Zen-mashi*, *The Classic*, *Beginner Safe*, *Chomolungma*, *Triple Grande Latte*, *Devil's Matcha Frappuccino*, *Red Eye*, *Dirty Chai*, or *Oreo Frappuccino*.
 - **🌐 Automatic Bilingual Support (JA / EN)**:
   - Automatically loads in Japanese for Japanese browser environments and English for all other locales. Includes a manual toggle button in the header.
 - **🔊 Speech Synthesis (Web Speech API)**:
@@ -50,11 +59,12 @@ jirobucks/
 ├── index.html        # Semantic HTML5 markup
 ├── style.css         # Responsive styling with Jiro & Starbucks themes
 ├── script.js         # Generator logic, i18n, speech synthesis, analytics
-├── config.js         # Analytics configuration (GTM_ID)
+├── config.example.js # Template for config.js
+├── config.js         # Analytics configuration (GTM_ID, git-ignored)
 ├── README.md         # English documentation
 ├── README.ja.md      # Japanese documentation
 ├── LICENSE           # MIT License (© 2026 c1t0d0s0)
-└── MEMO.txt          # Requirements specification
+└── MEMO.txt          # Requirements specification (git-ignored)
 ```
 
 ---
@@ -79,7 +89,11 @@ npx serve .
 
 ## ⚙️ Configuration (`config.js`)
 
-To enable Google Analytics 4 (GA4) or Google Tag Manager (GTM), set your ID in `config.js`:
+To enable Google Analytics 4 (GA4) or Google Tag Manager (GTM), copy the template and set your ID in `config.js`:
+
+```bash
+cp config.example.js config.js
+```
 
 ```javascript
 const GTM_ID = 'G-XXXXXXXXXX'; // or 'GTM-XXXXXXX'
