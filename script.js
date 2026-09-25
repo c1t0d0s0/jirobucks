@@ -138,6 +138,7 @@ const I18N = {
     bucksStep1: 'Step 1',
     bucksTitleDrink: 'ベースドリンクを選択',
     labelDrinkCategory: 'カテゴリー',
+    catCoffee: 'コーヒー',
     catEspresso: 'エスプレッソ',
     catFrappuccino: 'フラペチーノ',
     catTea: 'ティー・その他',
@@ -181,6 +182,7 @@ const I18N = {
     optSyrupVanilla: 'バニラシロップ追加 (+55円)',
     optSyrupCaramel: 'キャラメルシロップ追加 (+55円)',
     optSyrupWhiteMocha: 'ホワイトモカシロップ追加 (+55円)',
+    optSyrupHazelnut: 'ヘーゼルナッツシロップ追加 (+55円)',
     optSyrupExtra: 'シロップ多め (エクストラシロップ/無料)',
     optSyrupLight: 'シロップ少なめ (ライトシロップ/無料)',
     optSyrupNone: 'ノンシロップ (シロップ抜き/無料)',
@@ -295,6 +297,7 @@ const I18N = {
     bucksStep1: 'Step 1',
     bucksTitleDrink: 'Select Base Drink',
     labelDrinkCategory: 'Category',
+    catCoffee: 'Coffee',
     catEspresso: 'Espresso',
     catFrappuccino: 'Frappuccino',
     catTea: 'Tea & Others',
@@ -338,6 +341,7 @@ const I18N = {
     optSyrupVanilla: 'Add Vanilla Syrup (+¥55)',
     optSyrupCaramel: 'Add Caramel Syrup (+¥55)',
     optSyrupWhiteMocha: 'Add White Mocha Syrup (+¥55)',
+    optSyrupHazelnut: 'Add Hazelnut Syrup (+¥55)',
     optSyrupExtra: 'Extra Syrup (Free)',
     optSyrupLight: 'Light Syrup (Free)',
     optSyrupNone: 'No Syrup (Free)',
@@ -377,18 +381,24 @@ const STARBUCKS_DRINKS = [
   { id: 'caramel_macchiato', category: 'espresso', ja: 'キャラメル マキアート', en: 'Caramel Macchiato', defaultHotIce: 'both', hasWhip: false, hasSyrup: true, hasEspresso: true },
   { id: 'caffe_mocha', category: 'espresso', ja: 'カフェ モカ', en: 'Caffè Mocha', defaultHotIce: 'both', hasWhip: true, hasSyrup: true, hasEspresso: true },
   { id: 'white_mocha', category: 'espresso', ja: 'ホワイト モカ', en: 'White Mocha', defaultHotIce: 'both', hasWhip: true, hasSyrup: true, hasEspresso: true },
+  { id: 'pumpkin_spice_latte', category: 'espresso', ja: 'パンプキン スパイス ラテ', en: 'Pumpkin Spice Latte', defaultHotIce: 'both', hasWhip: true, hasSyrup: true, hasEspresso: true },
+  { id: 'cinnamon_dolce_latte', category: 'espresso', ja: 'シナモン ドルチェ ラテ', en: 'Cinnamon Dolce Latte', defaultHotIce: 'both', hasWhip: true, hasSyrup: true, hasEspresso: true },
 
   // Frappuccino
   { id: 'dark_mocha_frap', category: 'frappuccino', ja: 'ダーク モカ チップ フラペチーノ', en: 'Dark Mocha Chip Frappuccino', defaultHotIce: 'iced', hasWhip: true, hasSyrup: true, hasEspresso: false },
   { id: 'matcha_frap', category: 'frappuccino', ja: '抹茶 クリーム フラペチーノ', en: 'Matcha Cream Frappuccino', defaultHotIce: 'iced', hasWhip: true, hasSyrup: true, hasEspresso: false },
   { id: 'caramel_frap', category: 'frappuccino', ja: 'キャラメル フラペチーノ', en: 'Caramel Frappuccino', defaultHotIce: 'iced', hasWhip: true, hasSyrup: true, hasEspresso: false },
   { id: 'vanilla_frap', category: 'frappuccino', ja: 'バニラ クリーム フラペチーノ', en: 'Vanilla Cream Frappuccino', defaultHotIce: 'iced', hasWhip: true, hasSyrup: true, hasEspresso: false },
+  { id: 'strawberry_frap', category: 'frappuccino', ja: 'ストロベリー クリーム フラペチーノ', en: 'Strawberries and Crème Frappuccino', defaultHotIce: 'iced', hasWhip: true, hasSyrup: true, hasEspresso: false },
+
+  // Coffee
+  { id: 'drip_coffee', category: 'coffee', ja: 'ドリップ コーヒー', en: 'Drip Coffee', defaultHotIce: 'both', hasWhip: false, hasSyrup: false, hasEspresso: false },
+  { id: 'cafe_misto', category: 'coffee', ja: 'カフェ ミスト', en: 'Caffè Misto', defaultHotIce: 'both', hasWhip: false, hasSyrup: false, hasEspresso: false },
 
   // Tea & Others
   { id: 'chai_tea_latte', category: 'tea', ja: 'チャイ ティー ラテ', en: 'Chai Tea Latte', defaultHotIce: 'both', hasWhip: false, hasSyrup: true, hasEspresso: false },
   { id: 'matcha_tea_latte', category: 'tea', ja: '抹茶 ティー ラテ', en: 'Matcha Tea Latte', defaultHotIce: 'both', hasWhip: false, hasSyrup: true, hasEspresso: false },
-  { id: 'hojicha_tea_latte', category: 'tea', ja: 'ほうじ茶 ティー ラテ', en: 'Hojicha Tea Latte', defaultHotIce: 'both', hasWhip: false, hasSyrup: true, hasEspresso: false },
-  { id: 'drip_coffee', category: 'tea', ja: 'ドリップ コーヒー', en: 'Drip Coffee', defaultHotIce: 'both', hasWhip: false, hasSyrup: false, hasEspresso: false }
+  { id: 'hojicha_tea_latte', category: 'tea', ja: 'ほうじ茶 ティー ラテ', en: 'Hojicha Tea Latte', defaultHotIce: 'both', hasWhip: false, hasSyrup: true, hasEspresso: false }
 ];
 
 // ==========================================================================
@@ -487,14 +497,14 @@ const STARBUCKS_PRESETS = [
     emoji: '👁️',
     ja: 'レッドアイ (ドリップ+1ショット)',
     en: 'Red Eye (Drip + 1 Shot)',
-    state: { category: 'tea', drinkId: 'drip_coffee', temp: 'hot', size: 'tall', milk: 'regular', shots: 'single', beans: 'standard', syrup: 'default', whip: 'default', drizzle: 'none', icemilk: 'default', frapcustom: 'none' }
+    state: { category: 'coffee', drinkId: 'drip_coffee', temp: 'hot', size: 'tall', milk: 'regular', shots: 'single', beans: 'standard', syrup: 'default', whip: 'default', drizzle: 'none', icemilk: 'default', frapcustom: 'none' }
   },
   {
     id: 'black_eye',
     emoji: '💥',
     ja: 'ブラックアイ / デプスチャージ (ドリップ+2ショット)',
     en: 'Black Eye / Depth Charge (Drip + 2 Shots)',
-    state: { category: 'tea', drinkId: 'drip_coffee', temp: 'hot', size: 'tall', milk: 'regular', shots: 'double', beans: 'standard', syrup: 'default', whip: 'default', drizzle: 'none', icemilk: 'default', frapcustom: 'none' }
+    state: { category: 'coffee', drinkId: 'drip_coffee', temp: 'hot', size: 'tall', milk: 'regular', shots: 'double', beans: 'standard', syrup: 'default', whip: 'default', drizzle: 'none', icemilk: 'default', frapcustom: 'none' }
   },
   {
     id: 'dirty_chai',
@@ -515,7 +525,49 @@ const STARBUCKS_PRESETS = [
     emoji: '🐯',
     ja: 'アイオブザタイガー (ドリップ+4ショット)',
     en: 'Eye of the Tiger (Drip + 4 Shots)',
-    state: { category: 'tea', drinkId: 'drip_coffee', temp: 'hot', size: 'venti', milk: 'regular', shots: 'quad', beans: 'standard', syrup: 'default', whip: 'default', drizzle: 'none', icemilk: 'default', frapcustom: 'none' }
+    state: { category: 'coffee', drinkId: 'drip_coffee', temp: 'hot', size: 'venti', milk: 'regular', shots: 'quad', beans: 'standard', syrup: 'default', whip: 'default', drizzle: 'none', icemilk: 'default', frapcustom: 'none' }
+  },
+  {
+    id: 'oreo_frap',
+    emoji: '🍪',
+    ja: 'オレオ フラペチーノ (裏メニュー)',
+    en: 'Oreo Frappuccino (Secret Menu)',
+    state: { category: 'frappuccino', drinkId: 'vanilla_frap', temp: 'iced', size: 'tall', milk: 'regular', shots: 'none', beans: 'standard', syrup: 'default', whip: 'default', drizzle: 'chocolate', icemilk: 'default', frapcustom: 'chocolatechip' }
+  },
+  {
+    id: 'tuxedo_mocha',
+    emoji: '🤵',
+    ja: 'タキシード モカ / ゼブラ モカ',
+    en: 'Tuxedo Mocha / Zebra Mocha',
+    state: { category: 'espresso', drinkId: 'caffe_mocha', temp: 'hot', size: 'tall', milk: 'regular', shots: 'standard', beans: 'standard', syrup: 'whitemocha', whip: 'default', drizzle: 'none', icemilk: 'default', frapcustom: 'none' }
+  },
+  {
+    id: 'captain_crunch',
+    emoji: '🍓',
+    ja: 'キャプテン クランチ (裏メニュー)',
+    en: 'Captain Crunch (Secret Menu)',
+    state: { category: 'frappuccino', drinkId: 'strawberry_frap', temp: 'iced', size: 'tall', milk: 'regular', shots: 'none', beans: 'standard', syrup: 'caramel', whip: 'default', drizzle: 'none', icemilk: 'default', frapcustom: 'chocolatechip' }
+  },
+  {
+    id: 'neapolitan_frap',
+    emoji: '🍨',
+    ja: 'ネオポリタン フラペチーノ (3色アイス風)',
+    en: 'Neapolitan Frappuccino',
+    state: { category: 'frappuccino', drinkId: 'strawberry_frap', temp: 'iced', size: 'tall', milk: 'regular', shots: 'none', beans: 'standard', syrup: 'vanilla', whip: 'default', drizzle: 'chocolate', icemilk: 'default', frapcustom: 'none' }
+  },
+  {
+    id: 'the_nutella',
+    emoji: '🍫',
+    ja: 'ヌテラ (カフェミスト+ヘーゼル+チョコ)',
+    en: 'The Nutella (Cafe Misto + Hazelnut)',
+    state: { category: 'coffee', drinkId: 'cafe_misto', temp: 'hot', size: 'tall', milk: 'regular', shots: 'none', beans: 'standard', syrup: 'hazelnut', whip: 'default', drizzle: 'chocolate', icemilk: 'default', frapcustom: 'none' }
+  },
+  {
+    id: 'chocolate_pumpkin',
+    emoji: '🎃',
+    ja: 'チョコレート パンプキン (秋の裏メニュー)',
+    en: 'Chocolate Pumpkin (Secret Menu)',
+    state: { category: 'espresso', drinkId: 'pumpkin_spice_latte', temp: 'hot', size: 'tall', milk: 'regular', shots: 'standard', beans: 'standard', syrup: 'default', whip: 'default', drizzle: 'chocolate', icemilk: 'default', frapcustom: 'none' }
   }
 ];
 
@@ -648,7 +700,11 @@ function calculateStarbucksMetrics(sbState, isJa) {
     chai_tea_latte: { hot: 220, iced: 198 },
     matcha_tea_latte: { hot: 225, iced: 168 },
     hojicha_tea_latte: { hot: 162, iced: 140 },
-    drip_coffee: { hot: 18, iced: 10 }
+    drip_coffee: { hot: 18, iced: 10 },
+    pumpkin_spice_latte: { hot: 380, iced: 300 },
+    cinnamon_dolce_latte: { hot: 340, iced: 260 },
+    strawberry_frap: { iced: 356 },
+    cafe_misto: { hot: 126, iced: 95 }
   };
 
   const drinkCal = baseMap[drink.id] || { hot: 180, iced: 150 };
@@ -676,7 +732,7 @@ function calculateStarbucksMetrics(sbState, isJa) {
   else if (sbState.shots === 'triple') cal += 15;
   else if (sbState.shots === 'quad') cal += 20;
 
-  if (sbState.syrup === 'vanilla' || sbState.syrup === 'caramel') cal += 20;
+  if (sbState.syrup === 'vanilla' || sbState.syrup === 'caramel' || sbState.syrup === 'hazelnut') cal += 20;
   else if (sbState.syrup === 'whitemocha') cal += 50;
   else if (sbState.syrup === 'extra' && drink.hasSyrup) cal += 35;
   else if (sbState.syrup === 'light' && drink.hasSyrup) cal -= 20;
@@ -928,7 +984,9 @@ const STARBUCKS_BASE_SHOTS = {
   caffe_mocha: { short: 1, tall: 1, grande: 2, venti: 3 },
   white_mocha: { short: 1, tall: 1, grande: 2, venti: 3 },
   caramel_macchiato: { short: 1, tall: 1, grande: 2, venti: 3 },
-  caffe_americano: { short: 1, tall: 2, grande: 3, venti: 4 }
+  caffe_americano: { short: 1, tall: 2, grande: 3, venti: 4 },
+  pumpkin_spice_latte: { short: 1, tall: 1, grande: 2, venti: 3 },
+  cinnamon_dolce_latte: { short: 1, tall: 1, grande: 2, venti: 3 }
 };
 
 const STARBUCKS_CALL_NAMES = {
@@ -937,66 +995,69 @@ const STARBUCKS_CALL_NAMES = {
   caffe_americano: { ja: 'アメリカーノ', en: 'Americano' },
   caramel_macchiato: { ja: 'キャラメル マキアート', en: 'Caramel Macchiato' },
   caffe_mocha: { ja: 'モカ', en: 'Mocha' },
-  white_mocha: { ja: 'ホワイト モカ', en: 'White Mocha' }
+  white_mocha: { ja: 'ホワイト モカ', en: 'White Mocha' },
+  pumpkin_spice_latte: { ja: 'パンプキン スパイス ラテ', en: 'Pumpkin Spice Latte' },
+  cinnamon_dolce_latte: { ja: 'シナモン ドルチェ ラテ', en: 'Cinnamon Dolce Latte' }
 };
 
 /**
  * Detect Starbucks Monikers / Aliases (通称)
- * Identifies recognized specialty combinations:
- * - Red Eye: Drip Coffee + 1 Shot
- * - Black Eye: Drip Coffee + 2 Shots (Depth Charge)
- * - Green Eye: Drip Coffee + 3 Shots
- * - Eye of the Tiger: Drip Coffee + 4 Shots
- * - Dirty Chai: Chai Tea Latte + Espresso Shot(s)
- * - Dirty Matcha: Matcha Latte + Espresso Shot(s)
+ * Identifies recognized specialty combinations and secret menu drinks:
+ * - Red Eye, Black Eye, Green Eye, Eye of the Tiger
+ * - Dirty Chai, Dirty Matcha
+ * - Secret Menu: Biscotti Frappuccino, Captain Crunch, Neapolitan Frappuccino,
+ *   Raspberry Cheesecake, Chocolate Turtle, French Vanilla, Blended Strawberry Lemonade,
+ *   Oreo Frappuccino, Tuxedo Mocha (Zebra Mocha), The Nutella, Super Cream Frappuccino,
+ *   Three C's, Chocolate Pumpkin
  */
 function detectStarbucksAlias(sbState) {
-  const { drinkId, shots } = sbState;
-  if (!shots || shots === 'none' || shots === 'standard') return null;
+  const { drinkId, shots, syrup, drizzle, frapcustom, milk, whip } = sbState;
+  const drink = STARBUCKS_DRINKS.find(d => d.id === drinkId) || STARBUCKS_DRINKS[0];
 
-  if (drinkId === 'drip_coffee') {
-    if (shots === 'single') {
-      return {
-        nameJa: 'レッドアイ',
-        nameEn: 'Red Eye',
-        fullNameJa: 'レッドアイ (Red Eye)',
-        fullNameEn: 'Red Eye (レッドアイ)',
-        noteJa: 'ドリップコーヒー＋エスプレッソ1ショット',
-        noteEn: 'Drip Coffee + 1 Espresso Shot'
-      };
-    }
-    if (shots === 'double') {
-      return {
-        nameJa: 'ブラックアイ',
-        nameEn: 'Black Eye',
-        fullNameJa: 'ブラックアイ (Black Eye)',
-        fullNameEn: 'Black Eye (ブラックアイ)',
-        noteJa: '※ デプスチャージ (Depth Charge) とも呼ぶ',
-        noteEn: '※ Also known as Depth Charge'
-      };
-    }
-    if (shots === 'triple') {
-      return {
-        nameJa: 'グリーンアイ',
-        nameEn: 'Green Eye',
-        fullNameJa: 'グリーンアイ (Green Eye)',
-        fullNameEn: 'Green Eye (グリーンアイ)',
-        noteJa: '※ デッドアイ (Dead Eye) とも呼ぶ',
-        noteEn: '※ Also known as Dead Eye'
-      };
-    }
-    if (shots === 'quad') {
-      return {
-        nameJa: 'アイオブザタイガー',
-        nameEn: 'Eye of the Tiger',
-        fullNameJa: 'アイオブザタイガー (Eye of the Tiger)',
-        fullNameEn: 'Eye of the Tiger (アイオブザタイガー)',
-        noteJa: 'ドリップコーヒー＋エスプレッソ4ショット',
-        noteEn: 'Drip Coffee + 4 Espresso Shots'
-      };
-    }
-  } else if (drinkId === 'chai_tea_latte') {
-    if (shots === 'single' || shots === 'double' || shots === 'triple' || shots === 'quad') {
+  // 1. Espresso Shot Combinations on Non-Espresso Drinks
+  if (shots && shots !== 'none' && shots !== 'standard') {
+    if (drinkId === 'drip_coffee') {
+      if (shots === 'single') {
+        return {
+          nameJa: 'レッドアイ',
+          nameEn: 'Red Eye',
+          fullNameJa: 'レッドアイ (Red Eye)',
+          fullNameEn: 'Red Eye (レッドアイ)',
+          noteJa: 'ドリップコーヒー＋エスプレッソ1ショット',
+          noteEn: 'Drip Coffee + 1 Espresso Shot'
+        };
+      }
+      if (shots === 'double') {
+        return {
+          nameJa: 'ブラックアイ',
+          nameEn: 'Black Eye',
+          fullNameJa: 'ブラックアイ (Black Eye)',
+          fullNameEn: 'Black Eye (ブラックアイ)',
+          noteJa: '※ デプスチャージ (Depth Charge) とも呼ぶ',
+          noteEn: '※ Also known as Depth Charge'
+        };
+      }
+      if (shots === 'triple') {
+        return {
+          nameJa: 'グリーンアイ',
+          nameEn: 'Green Eye',
+          fullNameJa: 'グリーンアイ (Green Eye)',
+          fullNameEn: 'Green Eye (グリーンアイ)',
+          noteJa: '※ デッドアイ (Dead Eye) とも呼ぶ',
+          noteEn: '※ Also known as Dead Eye'
+        };
+      }
+      if (shots === 'quad') {
+        return {
+          nameJa: 'アイオブザタイガー',
+          nameEn: 'Eye of the Tiger',
+          fullNameJa: 'アイオブザタイガー (Eye of the Tiger)',
+          fullNameEn: 'Eye of the Tiger (アイオブザタイガー)',
+          noteJa: 'ドリップコーヒー＋エスプレッソ4ショット',
+          noteEn: 'Drip Coffee + 4 Espresso Shots'
+        };
+      }
+    } else if (drinkId === 'chai_tea_latte') {
       return {
         nameJa: 'ダーティーチャイ',
         nameEn: 'Dirty Chai',
@@ -1005,9 +1066,7 @@ function detectStarbucksAlias(sbState) {
         noteJa: 'チャイティーラテにエスプレッソを追加した人気の濃厚カスタム',
         noteEn: 'Chai Tea Latte with espresso added'
       };
-    }
-  } else if (drinkId === 'matcha_tea_latte' || drinkId === 'matcha_frap') {
-    if (shots === 'single' || shots === 'double' || shots === 'triple' || shots === 'quad') {
+    } else if (drinkId === 'matcha_tea_latte' || drinkId === 'matcha_frap') {
       return {
         nameJa: 'ダーティーマッチャ',
         nameEn: 'Dirty Matcha',
@@ -1017,6 +1076,131 @@ function detectStarbucksAlias(sbState) {
         noteEn: 'Matcha Latte with espresso added'
       };
     }
+  }
+
+  // 2. Secret Menu Items (starbucks-secret-menu1.jpg)
+
+  // Captain Crunch: Strawberries & Creme with caramel/hazelnut & choc chips
+  if (drinkId === 'strawberry_frap' && (syrup === 'caramel' || syrup === 'hazelnut') && (frapcustom === 'chocolatechip' || frapcustom === 'allcustom')) {
+    return {
+      nameJa: 'キャプテン クランチ',
+      nameEn: 'Captain Crunch',
+      fullNameJa: 'キャプテン クランチ (Captain Crunch)',
+      fullNameEn: 'Captain Crunch (キャプテン クランチ)',
+      noteJa: 'ストロベリー＋ナッツ系シロップ＋チョコチップの有名裏メニュー',
+      noteEn: 'Strawberries & Creme with caramel/hazelnut & chocolate chips'
+    };
+  }
+
+  // Neapolitan Frappuccino: Strawberries & Creme with vanilla and mocha/chocolate
+  if (drinkId === 'strawberry_frap' && (syrup === 'vanilla' || drizzle === 'chocolate' || drizzle === 'both')) {
+    return {
+      nameJa: 'ネオポリタン フラペチーノ',
+      nameEn: 'Neapolitan Frappuccino',
+      fullNameJa: 'ネオポリタン フラペチーノ (Neapolitan Frappuccino)',
+      fullNameEn: 'Neapolitan Frappuccino (ネオポリタン フラペチーノ)',
+      noteJa: 'ストロベリー＋バニラ＋チョコの3色アイス風フラペチーノ',
+      noteEn: 'Strawberries & Creme with vanilla and mocha chocolate'
+    };
+  }
+
+  // Blended Strawberry Lemonade: Strawberries & Creme without whip/nonfat
+  if (drinkId === 'strawberry_frap' && (milk === 'nonfat' || whip === 'none')) {
+    return {
+      nameJa: 'ブレンデッド ストロベリー レモネード',
+      nameEn: 'Blended Strawberry Lemonade',
+      fullNameJa: 'ブレンデッド ストロベリー レモネード (Blended Strawberry Lemonade)',
+      fullNameEn: 'Blended Strawberry Lemonade (ブレンデッド ストロベリー レモネード)',
+      noteJa: 'ストロベリー果汁感を爽やかに楽しむフローズンカスタム',
+      noteEn: 'A refreshing blended strawberry lemonade style drink'
+    };
+  }
+
+  // Oreo Frappuccino: Dark mocha chip with white mocha OR Vanilla frap with chips & chocolate
+  if ((drinkId === 'dark_mocha_frap' && syrup === 'whitemocha') ||
+      (drinkId === 'vanilla_frap' && (frapcustom === 'chocolatechip' || frapcustom === 'allcustom') && (drizzle === 'chocolate' || drizzle === 'both' || syrup === 'whitemocha'))) {
+    return {
+      nameJa: 'オレオ フラペチーノ',
+      nameEn: 'Oreo Frappuccino',
+      fullNameJa: 'オレオ フラペチーノ (Oreo Frappuccino)',
+      fullNameEn: 'Oreo Frappuccino (オレオ フラペチーノ)',
+      noteJa: '※ クッキー＆クリーム風フラペチーノ（ホワイトモカ＋チョコチップ）',
+      noteEn: '※ Double Chocolate Chip with white mocha or Vanilla with chips & choc'
+    };
+  }
+
+  // Super Cream Frappuccino: Extra whip + breve milk
+  if (drink.category === 'frappuccino' && milk === 'breve' && whip === 'extra') {
+    return {
+      nameJa: 'スーパークリーム フラペチーノ',
+      nameEn: 'Super Cream Frappuccino',
+      fullNameJa: 'スーパークリーム フラペチーノ (Super Cream Frappuccino)',
+      fullNameEn: 'Super Cream Frappuccino (スーパークリーム フラペチーノ)',
+      noteJa: 'ブレベミルク＆エクストラホイップで氷感を抑えた極上のなめらかさ',
+      noteEn: 'Extra whipped cream with breve milk for an ultra smooth & rich texture'
+    };
+  }
+
+  // Tuxedo Mocha / Zebra Mocha: Regular mocha + white mocha syrup OR white mocha + choc drizzle
+  if ((drinkId === 'caffe_mocha' && syrup === 'whitemocha') ||
+      (drinkId === 'white_mocha' && (drizzle === 'chocolate' || drizzle === 'both'))) {
+    return {
+      nameJa: 'タキシード モカ',
+      nameEn: 'Tuxedo Mocha',
+      fullNameJa: 'タキシード モカ (Tuxedo Mocha)',
+      fullNameEn: 'Tuxedo Mocha (タキシード モカ)',
+      noteJa: '※ ゼブラ モカ (Zebra Mocha) とも呼ぶ。モカとホワイトモカのハーフ＆ハーフ',
+      noteEn: '※ Also known as Zebra Mocha. Half regular mocha and half white mocha'
+    };
+  }
+
+  // The Nutella: Cafe Misto or Mocha + hazelnut + chocolate/caramel drizzle
+  if ((drinkId === 'cafe_misto' && (syrup === 'hazelnut' || drizzle === 'chocolate' || drizzle === 'caramel' || drizzle === 'both')) ||
+      (drinkId === 'caffe_mocha' && syrup === 'hazelnut' && (drizzle === 'caramel' || drizzle === 'both'))) {
+    return {
+      nameJa: 'ヌテラ',
+      nameEn: 'The Nutella',
+      fullNameJa: 'ヌテラ (The Nutella)',
+      fullNameEn: 'The Nutella (ヌテラ)',
+      noteJa: 'モカやカフェミストにヘーゼルナッツとキャラメルを加えたチョコヘーゼルナッツ風味',
+      noteEn: 'Cafe Misto or Mocha with chocolate, hazelnut, and caramel drizzle'
+    };
+  }
+
+  // French Vanilla Flavor: Vanilla + hazelnut
+  if (syrup === 'hazelnut' && (drinkId === 'vanilla_frap' || syrup === 'vanilla')) {
+    return {
+      nameJa: 'フレンチ バニラ',
+      nameEn: 'French Vanilla',
+      fullNameJa: 'フレンチ バニラ (French Vanilla)',
+      fullNameEn: 'French Vanilla (フレンチ バニラ)',
+      noteJa: 'バニラとヘーゼルナッツシロップを合わせた芳醇で香ばしいフレンチバニラ風味',
+      noteEn: 'Half hazelnut and half vanilla'
+    };
+  }
+
+  // Three C's: Cinnamon Dolce Latte + caramel + chocolate
+  if (drinkId === 'cinnamon_dolce_latte' && (syrup === 'caramel' || drizzle === 'chocolate' || drizzle === 'both')) {
+    return {
+      nameJa: 'スリーシーズ',
+      nameEn: 'Three C\'s',
+      fullNameJa: 'スリーシーズ (Three C\'s)',
+      fullNameEn: 'Three C\'s (スリーシーズ)',
+      noteJa: 'シナモン (Cinnamon) ＋ キャラメル (Caramel) ＋ チョコ (Chocolate) の3つのC',
+      noteEn: 'Cinnamon Dolce latte with caramel and chocolate mocha syrup'
+    };
+  }
+
+  // Chocolate Pumpkin: Pumpkin Spice Latte + chocolate drizzle / white mocha
+  if (drinkId === 'pumpkin_spice_latte' && (drizzle === 'chocolate' || drizzle === 'both' || syrup === 'whitemocha')) {
+    return {
+      nameJa: 'チョコレート パンプキン',
+      nameEn: 'Chocolate Pumpkin',
+      fullNameJa: 'チョコレート パンプキン (Chocolate Pumpkin)',
+      fullNameEn: 'Chocolate Pumpkin (チョコレート パンプキン)',
+      noteJa: 'パンプキンスパイスラテにチョコレートを追加したパンプキンブレッド風カスタム',
+      noteEn: 'Pumpkin Spice Latte with chocolate syrup for a pumpkin chip bread taste'
+    };
   }
 
   return null;
@@ -1140,14 +1324,33 @@ function compileStarbucksSpell() {
         vanilla: { ja: isEspresso ? 'バニラ' : 'バニラシロップ追加', en: isEspresso ? 'Vanilla' : 'Add Vanilla Syrup' },
         caramel: { ja: isEspresso ? 'キャラメル' : 'キャラメルシロップ追加', en: isEspresso ? 'Caramel' : 'Add Caramel Syrup' },
         whitemocha: { ja: isEspresso ? 'ホワイトモカ' : 'ホワイトモカシロップ追加', en: isEspresso ? 'White Mocha' : 'Add White Mocha Syrup' },
+        hazelnut: { ja: isEspresso ? 'ヘーゼルナッツ' : 'ヘーゼルナッツシロップ追加', en: isEspresso ? 'Hazelnut' : 'Add Hazelnut Syrup' },
         extra: { ja: 'エクストラシロップ', en: 'Extra Syrup' },
         light: { ja: 'ライトシロップ', en: 'Light Syrup' },
         none: { ja: 'ノンシロップ', en: 'No Syrup' }
       };
       terms.push(syrupMap[sb.syrup].ja);
       termsEn.push(syrupMap[sb.syrup].en);
+      const syrupLabelsJa = {
+        vanilla: 'バニラシロップ追加',
+        caramel: 'キャラメルシロップ追加',
+        whitemocha: 'ホワイトモカシロップ追加',
+        hazelnut: 'ヘーゼルナッツシロップ追加',
+        extra: 'エクストラシロップ',
+        light: 'ライトシロップ',
+        none: 'ノンシロップ'
+      };
+      const syrupLabelsEn = {
+        vanilla: 'Add Vanilla Syrup',
+        caramel: 'Add Caramel Syrup',
+        whitemocha: 'Add White Mocha Syrup',
+        hazelnut: 'Add Hazelnut Syrup',
+        extra: 'Extra Syrup',
+        light: 'Light Syrup',
+        none: 'No Syrup'
+      };
       breakdown.push({
-        label: `🍯 ${isJa ? (sb.syrup === 'whitemocha' ? 'ホワイトモカシロップ追加' : sb.syrup === 'vanilla' ? 'バニラシロップ追加' : sb.syrup === 'caramel' ? 'キャラメルシロップ追加' : syrupMap[sb.syrup].ja) : (sb.syrup === 'whitemocha' ? 'Add White Mocha Syrup' : sb.syrup === 'vanilla' ? 'Add Vanilla Syrup' : sb.syrup === 'caramel' ? 'Add Caramel Syrup' : syrupMap[sb.syrup].en)}`,
+        label: `🍯 ${isJa ? (syrupLabelsJa[sb.syrup] || syrupMap[sb.syrup].ja) : (syrupLabelsEn[sb.syrup] || syrupMap[sb.syrup].en)}`,
         hl: true
       });
     }
@@ -1420,6 +1623,7 @@ function applyPreset(preset) {
     syncJiroChips();
   } else {
     state.starbucks = { ...state.starbucks, ...preset.state };
+    renderStarbucksDrinks();
     syncStarbucksChips();
   }
   updateSpellDisplay();
@@ -2038,7 +2242,7 @@ function generateRandomSpell() {
     const beans = ['standard', 'decaf', 'blonde'];
     state.starbucks.beans = beans[Math.floor(Math.random() * beans.length)];
 
-    const syrups = ['default', 'vanilla', 'caramel', 'whitemocha', 'extra'];
+    const syrups = ['default', 'vanilla', 'caramel', 'whitemocha', 'hazelnut', 'extra'];
     state.starbucks.syrup = syrups[Math.floor(Math.random() * syrups.length)];
 
     const whips = ['default', 'extra', 'none', 'add'];
