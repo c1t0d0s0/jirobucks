@@ -41,20 +41,19 @@ jobs:
             echo "const GTM_ID = '$GA_ID';" > config.js
 
             # 2. Inject Google tag directly into index.html
-            python3 -c "
-            import os
-            ga_id = os.environ['GA_ID'].strip()
-            snippet = f'''  <!-- Google tag (gtag.js) -->\n  <script async src=\"https://www.googletagmanager.com/gtag/js?id={ga_id}\"></script>\n  <script>\n    window.dataLayer = window.dataLayer || [];\n    function gtag(){{dataLayer.push(arguments);}}\n    gtag('js', new Date());\n    gtag('config', '{ga_id}');\n  </script>\n'''
-            with open('index.html', 'r', encoding='utf-8') as f:
-                content = f.read()
-            if '<head>' in content:
-                content = content.replace('<head>', '<head>\n' + snippet, 1)
-                with open('index.html', 'w', encoding='utf-8') as f:
-                    f.write(content)
-                print('Successfully embedded Google Analytics tag into index.html')
-            else:
-                print('Warning: <head> tag not found in index.html')
-            "
+            node -e '
+              const fs = require("fs");
+              const gaId = process.env.GA_ID.trim();
+              const snippet = `  <!-- Google tag (gtag.js) -->\n  <script async src="https://www.googletagmanager.com/gtag/js?id=${gaId}"></script>\n  <script>\n    window.dataLayer = window.dataLayer || [];\n    function gtag(){dataLayer.push(arguments);}\n    gtag("js", new Date());\n    gtag("config", "${gaId}");\n  </script>\n`;
+              let html = fs.readFileSync("index.html", "utf8");
+              if (html.includes("<head>")) {
+                html = html.replace("<head>", "<head>\n" + snippet);
+                fs.writeFileSync("index.html", html, "utf8");
+                console.log("Successfully embedded Google Analytics tag into index.html");
+              } else {
+                console.warn("Warning: <head> tag not found in index.html");
+              }
+            '
           else
             echo "vars.GA_ID is not set. Generating empty config.js..."
             echo "const GTM_ID = '';" > config.js
